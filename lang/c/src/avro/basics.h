@@ -50,6 +50,11 @@ enum avro_class_t {
 };
 typedef enum avro_class_t avro_class_t;
 
+typedef struct avro_chunk_t {
+	size_t begin;
+	size_t end;
+};
+
 struct avro_obj_t {
 	avro_type_t type;
 	avro_class_t class_type;

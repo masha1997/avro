@@ -51,6 +51,7 @@ struct avro_enum_schema_t {
 struct avro_array_schema_t {
 	struct avro_obj_t obj;
 	avro_schema_t items;
+	struct avro_chunk_t* chunk;
 };
 
 struct avro_map_schema_t {

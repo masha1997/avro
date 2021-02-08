@@ -20,6 +20,7 @@
 #include "avro/generic.h"
 #include "avro/errors.h"
 #include "avro/value.h"
+#include "avro/io.h"
 #include "encoding.h"
 #include "codec.h"
 #include <stdio.h>
@@ -28,6 +29,7 @@
 #include <fcntl.h>
 #include <time.h>
 #include <string.h>
+#include <stdbool.h>
 
 struct avro_file_reader_t_ {
 	avro_schema_t writers_schema;
@@ -39,6 +41,15 @@ struct avro_file_reader_t_ {
 	int64_t blocks_total;
 	int64_t current_blocklen;
 	char * current_blockdata;
+};
+
+struct avro_file_buffer_reader_t_ {
+	avro_schema_t writers_schema;
+	avro_reader_t reader;
+	avro_codec_t codec;
+	char sync[16];
+	int64_t blocks_read;
+	int64_t current_blockpos;
 };
 
 struct avro_file_writer_t_ {
@@ -93,7 +104,7 @@ static int write_header(avro_file_writer_t w)
 	check(rval, enc->write_bytes(w->writer, w->codec->name, strlen(w->codec->name)));
 	check(rval, enc->write_string(w->writer, "avro.schema"));
 	schema_writer =
-	    avro_writer_memory(&w->schema_buf[0], sizeof(w->schema_buf));
+			avro_writer_memory(&w->schema_buf[0], sizeof(w->schema_buf));
 	rval = avro_schema_to_json(w->writers_schema, schema_writer);
 	if (rval) {
 		avro_writer_free(schema_writer);
@@ -134,9 +145,9 @@ file_writer_init_fp(FILE *fp, const char *path, int should_close, const char *mo
  * fall back to the non-exclusive file writing.
  */
 #ifdef _WIN32
-  #define EXCLUSIVE_WRITE_MODE   "wb"
+#define EXCLUSIVE_WRITE_MODE   "wb"
 #else
-  #define EXCLUSIVE_WRITE_MODE   "wbx"
+#define EXCLUSIVE_WRITE_MODE   "wbx"
 #endif
 
 static int
@@ -160,7 +171,7 @@ file_writer_create(FILE *fp, const char *path, int should_close, avro_schema_t s
 	}
 
 	w->datum_writer =
-	    avro_writer_memory(w->datum_buffer, w->datum_buffer_size);
+			avro_writer_memory(w->datum_buffer, w->datum_buffer_size);
 	if (!w->datum_writer) {
 		avro_set_error("Cannot create datum writer for file %s", path);
 		avro_writer_free(w->writer);
@@ -174,28 +185,28 @@ file_writer_create(FILE *fp, const char *path, int should_close, avro_schema_t s
 
 int
 avro_file_writer_create(const char *path, avro_schema_t schema,
-			avro_file_writer_t * writer)
+                        avro_file_writer_t * writer)
 {
 	return avro_file_writer_create_with_codec_fp(NULL, path, 1, schema, writer, "null", 0);
 }
 
 int
 avro_file_writer_create_fp(FILE *fp, const char *path, int should_close, avro_schema_t schema,
-			avro_file_writer_t * writer)
+                           avro_file_writer_t * writer)
 {
 	return avro_file_writer_create_with_codec_fp(fp, path, should_close, schema, writer, "null", 0);
 }
 
 int avro_file_writer_create_with_codec(const char *path,
-			avro_schema_t schema, avro_file_writer_t * writer,
-			const char *codec, size_t block_size)
+                                       avro_schema_t schema, avro_file_writer_t * writer,
+                                       const char *codec, size_t block_size)
 {
 	return avro_file_writer_create_with_codec_fp(NULL, path, 1, schema, writer, codec, block_size);
 }
 
 int avro_file_writer_create_with_codec_fp(FILE *fp, const char *path, int should_close,
-			avro_schema_t schema, avro_file_writer_t * writer,
-			const char *codec, size_t block_size)
+                                          avro_schema_t schema, avro_file_writer_t * writer,
+                                          const char *codec, size_t block_size)
 {
 	avro_file_writer_t w;
 	int rval;
@@ -239,8 +250,8 @@ int avro_file_writer_create_with_codec_fp(FILE *fp, const char *path, int should
 }
 
 static int file_read_header(avro_reader_t reader,
-			    avro_schema_t * writers_schema, avro_codec_t codec,
-			    char *sync, int synclen)
+                            avro_schema_t * writers_schema, avro_codec_t codec,
+                            char *sync, int synclen)
 {
 	int rval;
 	avro_schema_t meta_schema;
@@ -336,7 +347,7 @@ file_writer_open(const char *path, avro_file_writer_t w, size_t block_size)
 	fp = fopen(path, "r+b");
 	if (!fp) {
 		avro_set_error("Error opening file: %s",
-			       strerror(errno));
+		               strerror(errno));
 		return errno;
 	}
 
@@ -349,8 +360,8 @@ file_writer_open(const char *path, avro_file_writer_t w, size_t block_size)
 		return ENOMEM;
 	}
 	rval =
-	    file_read_header(reader, &w->writers_schema, w->codec, w->sync,
-			     sizeof(w->sync));
+			file_read_header(reader, &w->writers_schema, w->codec, w->sync,
+			                 sizeof(w->sync));
 
 	avro_reader_free(reader);
 	if (rval) {
@@ -384,7 +395,7 @@ file_writer_open(const char *path, avro_file_writer_t w, size_t block_size)
 	}
 
 	w->datum_writer =
-	    avro_writer_memory(w->datum_buffer, w->datum_buffer_size);
+			avro_writer_memory(w->datum_buffer, w->datum_buffer_size);
 	if (!w->datum_writer) {
 		avro_set_error("Cannot create datum writer for file %s", path);
 		avro_writer_free(w->writer);
@@ -397,7 +408,7 @@ file_writer_open(const char *path, avro_file_writer_t w, size_t block_size)
 
 int
 avro_file_writer_open_bs(const char *path, avro_file_writer_t * writer,
-			 size_t block_size)
+                         size_t block_size)
 {
 	avro_file_writer_t w;
 	int rval;
@@ -448,9 +459,9 @@ static int file_read_block_count(avro_file_reader_t r)
 	}
 
 	check_prefix(rval, rval,
-		     "Cannot read file block count: ");
+	             "Cannot read file block count: ");
 	check_prefix(rval, enc->read_long(r->reader, &len),
-		     "Cannot read file block size: ");
+	             "Cannot read file block size: ");
 
 	if (r->current_blockdata && len > r->current_blocklen) {
 		r->current_blockdata = (char *) avro_realloc(r->current_blockdata, r->current_blocklen, len);
@@ -462,10 +473,10 @@ static int file_read_block_count(avro_file_reader_t r)
 
 	if (len > 0) {
 		check_prefix(rval, avro_read(r->reader, r->current_blockdata, len),
-			     "Cannot read file block: ");
+		             "Cannot read file block: ");
 
 		check_prefix(rval, avro_codec_decode(r->codec, r->current_blockdata, len),
-			     "Cannot decode file block: ");
+		             "Cannot decode file block: ");
 	}
 
 	avro_reader_memory_set_source(r->block_reader, (const char *) r->codec->block_data, r->codec->used_size);
@@ -474,8 +485,63 @@ static int file_read_block_count(avro_file_reader_t r)
 	return 0;
 }
 
+int avro_file_buffer_reader_fp(FILE *fp, const char *path, int should_close,
+                               avro_file_buffer_reader_t * reader)
+{
+	int rval;
+	avro_file_buffer_reader_t r = (avro_file_buffer_reader_t) avro_new(struct avro_file_buffer_reader_t_);
+	if (!r) {
+		if (should_close) {
+			fclose(fp);
+		}
+		avro_set_error("Cannot allocate file reader for %s", path);
+		return ENOMEM;
+	}
+
+	r->reader = avro_reader_file_fp(fp, should_close);
+	if (!r->reader) {
+		if (should_close) {
+			fclose(fp);
+		}
+		avro_set_error("Cannot allocate reader for file %s", path);
+		avro_freet(struct avro_file_reader_t_, r);
+		return ENOMEM;
+	}
+
+	r->codec = (avro_codec_t) avro_new(struct avro_codec_t_);
+	if (!r->codec) {
+		avro_set_error("Could not allocate codec for file %s", path);
+		avro_reader_free(r->reader);
+		avro_freet(struct avro_file_reader_t_, r);
+		return ENOMEM;
+	}
+	avro_codec(r->codec, NULL);
+	rval = file_read_header(r->reader, &r->writers_schema, r->codec,
+	                        r->sync, sizeof(r->sync));
+
+	if (r->codec->type != AVRO_CODEC_NULL)
+	{
+		avro_set_error("Read by chunk implemented only for null codec");
+		return EINVAL;
+	}
+
+	r->current_blockpos = avro_reader_file_ftell(r->reader);
+	r->blocks_read = 0;
+
+	if (rval) {
+		avro_reader_free(r->reader);
+		avro_codec_reset(r->codec);
+		avro_freet(struct avro_codec_t_, r->codec);
+		avro_freet(struct avro_file_reader_t_, r);
+		return rval;
+	}
+
+	*reader = r;
+	return 0;
+}
+
 int avro_file_reader_fp(FILE *fp, const char *path, int should_close,
-			avro_file_reader_t * reader)
+                        avro_file_reader_t * reader)
 {
 	int rval;
 	avro_file_reader_t r = (avro_file_reader_t) avro_new(struct avro_file_reader_t_);
@@ -514,7 +580,7 @@ int avro_file_reader_fp(FILE *fp, const char *path, int should_close,
 	avro_codec(r->codec, NULL);
 
 	rval = file_read_header(r->reader, &r->writers_schema, r->codec,
-				r->sync, sizeof(r->sync));
+	                        r->sync, sizeof(r->sync));
 	if (rval) {
 		avro_reader_free(r->reader);
 		avro_codec_reset(r->codec);
@@ -553,6 +619,18 @@ int avro_file_reader(const char *path, avro_file_reader_t * reader)
 	return avro_file_reader_fp(fp, path, 1, reader);
 }
 
+int avro_file_buffer_reader(const char *path, avro_file_buffer_reader_t * reader)
+{
+	FILE *fp;
+
+	fp = fopen(path, "rb");
+	if (!fp) {
+		return errno;
+	}
+
+	return avro_file_buffer_reader_fp(fp, path, 1, reader);
+}
+
 avro_schema_t
 avro_file_reader_get_writer_schema(avro_file_reader_t r)
 {
@@ -568,19 +646,19 @@ static int file_write_block(avro_file_writer_t w)
 	if (w->block_count) {
 		/* Write the block count */
 		check_prefix(rval, enc->write_long(w->writer, w->block_count),
-			     "Cannot write file block count: ");
+		             "Cannot write file block count: ");
 		/* Encode the block */
 		check_prefix(rval, avro_codec_encode(w->codec, w->datum_buffer, w->block_size),
-			     "Cannot encode file block: ");
+		             "Cannot encode file block: ");
 		/* Write the block length */
 		check_prefix(rval, enc->write_long(w->writer, w->codec->used_size),
-			     "Cannot write file block size: ");
+		             "Cannot write file block size: ");
 		/* Write the block */
 		check_prefix(rval, avro_write(w->writer, w->codec->block_data, w->codec->used_size),
-			     "Cannot write file block: ");
+		             "Cannot write file block: ");
 		/* Write the sync marker */
 		check_prefix(rval, write_sync(w),
-			     "Cannot write sync marker: ");
+		             "Cannot write sync marker: ");
 		/* Reset the datum writer */
 		avro_writer_reset(w->datum_writer);
 		w->block_count = 0;
@@ -599,7 +677,7 @@ int avro_file_writer_append(avro_file_writer_t w, avro_datum_t datum)
 	if (rval) {
 		check(rval, file_write_block(w));
 		rval =
-		    avro_write_data(w->datum_writer, w->writers_schema, datum);
+				avro_write_data(w->datum_writer, w->writers_schema, datum);
 		if (rval) {
 			avro_set_error("Datum too large for file block size");
 			/* TODO: if the datum encoder larger than our buffer,
@@ -637,7 +715,7 @@ avro_file_writer_append_value(avro_file_writer_t w, avro_value_t *value)
 
 int
 avro_file_writer_append_encoded(avro_file_writer_t w,
-				const void *buf, int64_t len)
+                                const void *buf, int64_t len)
 {
 	int rval;
 	check_param(EINVAL, w, "writer");
@@ -686,7 +764,7 @@ int avro_file_writer_close(avro_file_writer_t w)
 }
 
 int avro_file_reader_read(avro_file_reader_t r, avro_schema_t readers_schema,
-			  avro_datum_t * datum)
+                          avro_datum_t * datum)
 {
 	int rval;
 	char sync[16];
@@ -712,10 +790,77 @@ int avro_file_reader_read(avro_file_reader_t r, avro_schema_t readers_schema,
 
 	check(rval,
 	      avro_read_data(r->block_reader, r->writers_schema, readers_schema,
-			     datum));
+	                     datum));
 	r->blocks_read++;
 
 	return 0;
+}
+
+/* Returns a special helper-schema, that contains offsets from the file beginning of each chunk of the array in bytes.
+ * The file will be read from begin-value offset till end-value offset. */
+int create_fields_mapping_block_schema(avro_file_buffer_reader_t r, avro_datum_t ** mapped_datum) {
+	int rval;
+
+	const avro_encoding_t *enc = &avro_binary_encoding;
+
+	size_t blocks_total;
+
+	avro_reader_file_fseek(r->reader, r->current_blockpos);
+
+	rval = enc->read_long(r->reader, &blocks_total);
+	if (rval == EILSEQ && avro_reader_is_eof(r->reader)) {
+		return EOF;
+	}
+	size_t len;
+
+	check_prefix(rval, enc->read_long(r->reader, &len),
+	             "Cannot read file block size: ");
+
+	size_t old_position = avro_reader_file_ftell(r->reader);
+	check(rval, avro_map_data(r->reader, r->writers_schema, mapped_datum));
+	size_t new_position = avro_reader_file_ftell(r->reader);
+
+	if (new_position - old_position != len) {
+		return EILSEQ;
+	}
+	r->current_blockpos = new_position;
+	r->blocks_read++;
+	return 0;
+}
+
+
+bool avro_file_reader_subschema_read_chunk(avro_file_buffer_reader_t r,
+                                           long int begin_offset,
+                                           long int end_offset,
+                                           const char* subschema_name,
+                                           avro_datum_t * datum)
+{
+	int rval;
+
+	check_param(EINVAL, r, "reader");
+	check_param(EINVAL, datum, "datum");
+
+	avro_schema_t writer_schema = avro_schema_get_subschema(r->writers_schema, subschema_name);
+	if (!is_avro_array(writer_schema)) {
+		avro_set_error("Read by chunk implemented only for array");
+		return EINVAL;
+	}
+
+	avro_schema_t reader_schema = avro_schema_copy(writer_schema);
+
+	struct avro_chunk_t chunk = {
+			begin: begin_offset,
+			end: end_offset
+	};
+
+	avro_schema_array_set_chunk(reader_schema, &chunk);
+
+	check(rval,
+	      avro_read_data(r->reader, writer_schema, reader_schema,
+	                     datum));
+	avro_schema_decref(reader_schema);
+
+	return avro_reader_file_ftell(r->reader) >= end_offset;
 }
 
 int
@@ -748,6 +893,16 @@ avro_file_reader_read_value(avro_file_reader_t r, avro_value_t *value)
 	check(rval, avro_value_read(r->block_reader, value));
 	r->blocks_read++;
 
+	return 0;
+}
+int avro_file_buffer_reader_close(avro_file_buffer_reader_t reader)
+{
+	avro_schema_decref(reader->writers_schema);
+	avro_reader_free(reader->reader);
+	avro_codec_reset(reader->codec);
+	avro_freet(struct avro_codec_t_, reader->codec);
+
+	avro_freet(struct avro_file_buffer_reader_t_, reader);
 	return 0;
 }
 
