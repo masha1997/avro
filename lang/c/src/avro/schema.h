@@ -73,6 +73,8 @@ avro_schema_t avro_schema_map_values(avro_schema_t map);
 
 avro_schema_t avro_schema_array(const avro_schema_t items);
 avro_schema_t avro_schema_array_items(avro_schema_t array);
+struct avro_chunk_t* avro_schema_array_get_chunk(avro_schema_t array);
+void avro_schema_array_set_chunk(avro_schema_t array, struct avro_chunk_t* chunk);
 
 avro_schema_t avro_schema_union(void);
 size_t avro_schema_union_size(const avro_schema_t union_schema);

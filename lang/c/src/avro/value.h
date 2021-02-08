@@ -41,222 +41,224 @@ extern "C" {
 typedef struct avro_value_iface  avro_value_iface_t;
 
 typedef struct avro_value {
-	avro_value_iface_t  *iface;
-	void  *self;
+    avro_value_iface_t  *iface;
+    void  *self;
 } avro_value_t;
 
 struct avro_value_iface {
-	/*-------------------------------------------------------------
-	 * "class" methods
-	 */
+    /*-------------------------------------------------------------
+     * "class" methods
+     */
 
-	/**
-	 * Increment the reference count of the interface struct.  This
-	 * should be a no-op for static structs, since they don't need
-	 * reference counts.
-	 */
-	avro_value_iface_t *
-	(*incref_iface)(avro_value_iface_t *iface);
+    /**
+     * Increment the reference count of the interface struct.  This
+     * should be a no-op for static structs, since they don't need
+     * reference counts.
+     */
+    avro_value_iface_t *
+    (*incref_iface)(avro_value_iface_t *iface);
 
-	/**
-	 * Decrement the reference count of the interface struct.  If
-	 * the count falls to 0, free the struct.  This should be a
-	 * no-op for static structs, since they don't need reference
-	 * counts.
-	 */
-	void
-	(*decref_iface)(avro_value_iface_t *iface);
+    /**
+     * Decrement the reference count of the interface struct.  If
+     * the count falls to 0, free the struct.  This should be a
+     * no-op for static structs, since they don't need reference
+     * counts.
+     */
+    void
+    (*decref_iface)(avro_value_iface_t *iface);
 
-	/*-------------------------------------------------------------
-	 * General "instance" methods
-	 */
+    /*-------------------------------------------------------------
+     * General "instance" methods
+     */
 
-	/**
-	 * Increments the reference count of a value.
-	 */
+    /**
+     * Increments the reference count of a value.
+     */
 
-	void
-	(*incref)(avro_value_t *value);
+    void
+    (*incref)(avro_value_t *value);
 
-	/**
-	 * Decrements the reference count of a value, and frees the
-	 * value if the reference count drops to 0.  After calling this
-	 * method, your value instance is undefined, and cannot be used
-	 * anymore.
-	 */
+    /**
+     * Decrements the reference count of a value, and frees the
+     * value if the reference count drops to 0.  After calling this
+     * method, your value instance is undefined, and cannot be used
+     * anymore.
+     */
 
-	void
-	(*decref)(avro_value_t *value);
+    void
+    (*decref)(avro_value_t *value);
 
-	/**
-	 * Reset the instance to its "empty", default value.  You don't
-	 * have to free the underlying storage, if you want to keep it
-	 * around for later values.
-	 */
-	int
-	(*reset)(const avro_value_iface_t *iface, void *self);
+    /**
+     * Reset the instance to its "empty", default value.  You don't
+     * have to free the underlying storage, if you want to keep it
+     * around for later values.
+     */
+    int
+    (*reset)(const avro_value_iface_t *iface, void *self);
 
-	/**
-	 * Return the general Avro type of a value instance.
-	 */
-	avro_type_t
-	(*get_type)(const avro_value_iface_t *iface, const void *self);
+    /**
+     * Return the general Avro type of a value instance.
+     */
+    avro_type_t
+    (*get_type)(const avro_value_iface_t *iface, const void *self);
 
-	/**
-	 * Return the Avro schema that a value is an instance of.
-	 */
-	avro_schema_t
-	(*get_schema)(const avro_value_iface_t *iface, const void *self);
+    /**
+     * Return the Avro schema that a value is an instance of.
+     */
+    avro_schema_t
+    (*get_schema)(const avro_value_iface_t *iface, const void *self);
 
-	/*-------------------------------------------------------------
-	 * Primitive value getters
-	 */
-	int (*get_boolean)(const avro_value_iface_t *iface,
-			   const void *self, int *out);
-	int (*get_bytes)(const avro_value_iface_t *iface,
-			 const void *self, const void **buf, size_t *size);
-	int (*grab_bytes)(const avro_value_iface_t *iface,
-			  const void *self, avro_wrapped_buffer_t *dest);
-	int (*get_double)(const avro_value_iface_t *iface,
-			  const void *self, double *out);
-	int (*get_float)(const avro_value_iface_t *iface,
-			 const void *self, float *out);
-	int (*get_int)(const avro_value_iface_t *iface,
-		       const void *self, int32_t *out);
-	int (*get_long)(const avro_value_iface_t *iface,
-			const void *self, int64_t *out);
-	int (*get_null)(const avro_value_iface_t *iface,
-			const void *self);
-	/* The result will be NUL-terminated; the size will INCLUDE the
-	 * NUL terminator.  str will never be NULL unless there's an
-	 * error. */
-	int (*get_string)(const avro_value_iface_t *iface,
-			  const void *self, const char **str, size_t *size);
-	int (*grab_string)(const avro_value_iface_t *iface,
-			   const void *self, avro_wrapped_buffer_t *dest);
+    /*-------------------------------------------------------------
+     * Primitive value getters
+     */
+    int (*get_boolean)(const avro_value_iface_t *iface,
+                       const void *self, int *out);
+    int (*get_bytes)(const avro_value_iface_t *iface,
+                     const void *self, const void **buf, size_t *size);
+    int (*grab_bytes)(const avro_value_iface_t *iface,
+                      const void *self, avro_wrapped_buffer_t *dest);
+    int (*get_double)(const avro_value_iface_t *iface,
+                      const void *self, double *out);
+    int (*get_float)(const avro_value_iface_t *iface,
+                     const void *self, float *out);
+    int (*get_int)(const avro_value_iface_t *iface,
+                   const void *self, int32_t *out);
+    int (*get_long)(const avro_value_iface_t *iface,
+                    const void *self, int64_t *out);
+    int (*get_null)(const avro_value_iface_t *iface,
+                    const void *self);
+    /* The result will be NUL-terminated; the size will INCLUDE the
+     * NUL terminator.  str will never be NULL unless there's an
+     * error. */
+    int (*get_string)(const avro_value_iface_t *iface,
+                      const void *self, const char **str, size_t *size);
+    int (*grab_string)(const avro_value_iface_t *iface,
+                       const void *self, avro_wrapped_buffer_t *dest);
 
-	int (*get_enum)(const avro_value_iface_t *iface,
-			const void *self, int *out);
-	int (*get_fixed)(const avro_value_iface_t *iface,
-			 const void *self, const void **buf, size_t *size);
-	int (*grab_fixed)(const avro_value_iface_t *iface,
-			  const void *self, avro_wrapped_buffer_t *dest);
+    int (*get_enum)(const avro_value_iface_t *iface,
+                    const void *self, int *out);
+    int (*get_fixed)(const avro_value_iface_t *iface,
+                     const void *self, const void **buf, size_t *size);
+    int (*grab_fixed)(const avro_value_iface_t *iface,
+                      const void *self, avro_wrapped_buffer_t *dest);
 
-	/*-------------------------------------------------------------
-	 * Primitive value setters
-	 */
+    /*-------------------------------------------------------------
+     * Primitive value setters
+     */
 
-	/*
-	 * The "give" setters can be used to give control of an existing
-	 * buffer to a bytes, fixed, or string value.  The free function
-	 * will be called when the buffer is no longer needed.  (It's
-	 * okay for free to be NULL; that just means that nothing
-	 * special needs to be done to free the buffer.  That's useful
-	 * for a static string, for instance.)
-	 *
-	 * If your class can't take control of an existing buffer, then
-	 * your give functions should pass the buffer into the
-	 * corresponding "set" method and then immediately free the
-	 * buffer.
-	 *
-	 * Note that for strings, the free function will be called with
-	 * a size that *includes* the NUL terminator, even though you
-	 * provide a size that does *not*.
-	 */
+    /*
+     * The "give" setters can be used to give control of an existing
+     * buffer to a bytes, fixed, or string value.  The free function
+     * will be called when the buffer is no longer needed.  (It's
+     * okay for free to be NULL; that just means that nothing
+     * special needs to be done to free the buffer.  That's useful
+     * for a static string, for instance.)
+     *
+     * If your class can't take control of an existing buffer, then
+     * your give functions should pass the buffer into the
+     * corresponding "set" method and then immediately free the
+     * buffer.
+     *
+     * Note that for strings, the free function will be called with
+     * a size that *includes* the NUL terminator, even though you
+     * provide a size that does *not*.
+     */
 
-	int (*set_boolean)(const avro_value_iface_t *iface,
-			   void *self, int val);
-	int (*set_bytes)(const avro_value_iface_t *iface,
-			 void *self, void *buf, size_t size);
-	int (*give_bytes)(const avro_value_iface_t *iface,
-			  void *self, avro_wrapped_buffer_t *buf);
-	int (*set_double)(const avro_value_iface_t *iface,
-			  void *self, double val);
-	int (*set_float)(const avro_value_iface_t *iface,
-			 void *self, float val);
-	int (*set_int)(const avro_value_iface_t *iface,
-		       void *self, int32_t val);
-	int (*set_long)(const avro_value_iface_t *iface,
-			void *self, int64_t val);
-	int (*set_null)(const avro_value_iface_t *iface, void *self);
-	/* The input must be NUL-terminated */
-	int (*set_string)(const avro_value_iface_t *iface,
-			  void *self, const char *str);
-	/* and size must INCLUDE the NUL terminator */
-	int (*set_string_len)(const avro_value_iface_t *iface,
-			      void *self, const char *str, size_t size);
-	int (*give_string_len)(const avro_value_iface_t *iface,
-			       void *self, avro_wrapped_buffer_t *buf);
+    int (*set_boolean)(const avro_value_iface_t *iface,
+                       void *self, int val);
+    int (*set_bytes)(const avro_value_iface_t *iface,
+                     void *self, void *buf, size_t size);
+    int (*give_bytes)(const avro_value_iface_t *iface,
+                      void *self, avro_wrapped_buffer_t *buf);
+    int (*set_double)(const avro_value_iface_t *iface,
+                      void *self, double val);
+    int (*set_float)(const avro_value_iface_t *iface,
+                     void *self, float val);
+    int (*set_int)(const avro_value_iface_t *iface,
+                   void *self, int32_t val);
+    int (*set_long)(const avro_value_iface_t *iface,
+                    void *self, int64_t val);
+    int (*set_null)(const avro_value_iface_t *iface, void *self);
+    /* The input must be NUL-terminated */
+    int (*set_string)(const avro_value_iface_t *iface,
+                      void *self, const char *str);
+    /* and size must INCLUDE the NUL terminator */
+    int (*set_string_len)(const avro_value_iface_t *iface,
+                          void *self, const char *str, size_t size);
+    int (*give_string_len)(const avro_value_iface_t *iface,
+                           void *self, avro_wrapped_buffer_t *buf);
 
-	int (*set_enum)(const avro_value_iface_t *iface,
-			void *self, int val);
-	int (*set_fixed)(const avro_value_iface_t *iface,
-			 void *self, void *buf, size_t size);
-	int (*give_fixed)(const avro_value_iface_t *iface,
-			  void *self, avro_wrapped_buffer_t *buf);
+    int (*set_enum)(const avro_value_iface_t *iface,
+                    void *self, int val);
+    int (*set_fixed)(const avro_value_iface_t *iface,
+                     void *self, void *buf, size_t size);
+    int (*give_fixed)(const avro_value_iface_t *iface,
+                      void *self, avro_wrapped_buffer_t *buf);
 
-	/*-------------------------------------------------------------
-	 * Compound value getters
-	 */
+    /*-------------------------------------------------------------
+     * Compound value getters
+     */
 
-	/* Number of elements in array/map, or the number of fields in a
-	 * record. */
-	int (*get_size)(const avro_value_iface_t *iface,
-			const void *self, size_t *size);
+    /* Number of elements in array/map, or the number of fields in a
+     * record. */
+    int (*get_size)(const avro_value_iface_t *iface,
+                    const void *self, size_t *size);
 
-	/*
-	 * For arrays and maps, returns the element with the given
-	 * index.  (For maps, the "index" is based on the order that the
-	 * keys were added to the map.)  For records, returns the field
-	 * with that index in the schema.
-	 *
-	 * For maps and records, the name parameter (if given) will be
-	 * filled in with the key or field name of the returned value.
-	 * For arrays, the name parameter will always be ignored.
-	 */
-	int (*get_by_index)(const avro_value_iface_t *iface,
-			    const void *self, size_t index,
-			    avro_value_t *child, const char **name);
+    /*
+     * For arrays and maps, returns the element with the given
+     * index.  (For maps, the "index" is based on the order that the
+     * keys were added to the map.)  For records, returns the field
+     * with that index in the schema.
+     *
+     * For maps and records, the name parameter (if given) will be
+     * filled in with the key or field name of the returned value.
+     * For arrays, the name parameter will always be ignored.
+     */
+    int (*get_by_index)(const avro_value_iface_t *iface,
+                        const void *self, size_t index,
+                        avro_value_t *child, const char **name);
 
-	/*
-	 * For maps, returns the element with the given key.  For
-	 * records, returns the element with the given field name.  If
-	 * index is given, it will be filled in with the numeric index
-	 * of the returned value.
-	 */
-	int (*get_by_name)(const avro_value_iface_t *iface,
-			   const void *self, const char *name,
-			   avro_value_t *child, size_t *index);
+    /*
+     * For maps, returns the element with the given key.  For
+     * records, returns the element with the given field name.  If
+     * index is given, it will be filled in with the numeric index
+     * of the returned value.
+     */
+    int (*get_by_name)(const avro_value_iface_t *iface,
+                       const void *self, const char *name,
+                       avro_value_t *child, size_t *index);
 
-	/* Discriminant of current union value */
-	int (*get_discriminant)(const avro_value_iface_t *iface,
-				const void *self, int *out);
-	/* Current union value */
-	int (*get_current_branch)(const avro_value_iface_t *iface,
-				  const void *self, avro_value_t *branch);
+    /* Discriminant of current union value */
+    int (*get_discriminant)(const avro_value_iface_t *iface,
+                            const void *self, int *out);
+    /* Current union value */
+    int (*get_current_branch)(const avro_value_iface_t *iface,
+                              const void *self, avro_value_t *branch);
 
-	/*-------------------------------------------------------------
-	 * Compound value setters
-	 */
+    /*-------------------------------------------------------------
+     * Compound value setters
+     */
 
-	/*
-	 * For all of these, the value class should know which class to
-	 * use for its children.
-	 */
+    /*
+     * For all of these, the value class should know which class to
+     * use for its children.
+     */
 
-	/* Creates a new array element. */
-	int (*append)(const avro_value_iface_t *iface,
-		      void *self, avro_value_t *child_out, size_t *new_index);
+    /* Creates a new array element. */
+    int (*append)(const avro_value_iface_t *iface,
+                  void *self, avro_value_t *child_out, size_t *new_index);
 
-	/* Creates a new map element, or returns an existing one. */
-	int (*add)(const avro_value_iface_t *iface,
-		   void *self, const char *key,
-		   avro_value_t *child, size_t *index, int *is_new);
+    /* Creates a new map element, or returns an existing one. */
+    int (*add)(const avro_value_iface_t *iface,
+               void *self, const char *key,
+               avro_value_t *child, size_t *index, int *is_new);
 
-	/* Select a union branch. */
-	int (*set_branch)(const avro_value_iface_t *iface,
-			  void *self, int discriminant,
-			  avro_value_t *branch);
+    /* Select a union branch. */
+    int (*set_branch)(const avro_value_iface_t *iface,
+                      void *self, int discriminant,
+                      avro_value_t *branch);
+    struct avro_chunk_t*
+    (*get_current_chunk)(const avro_value_iface_t *iface, const void *self);
 };
 
 
@@ -389,7 +391,7 @@ avro_value_hash(avro_value_t *value);
 
 int
 avro_value_to_json(const avro_value_t *value,
-		   int one_line, char **json_str);
+                   int one_line, char **json_str);
 
 
 /**
@@ -419,6 +421,8 @@ avro_value_to_json(const avro_value_t *value,
     avro_value_call0(value, get_type, (avro_type_t) -1)
 #define avro_value_get_schema(value) \
     avro_value_call0(value, get_schema, NULL)
+#define avro_value_current_chunk(value) \
+    avro_value_call0(value, get_current_chunk, NULL)
 
 #define avro_value_get_boolean(value, out) \
     avro_value_call(value, get_boolean, EINVAL, out)

@@ -37,6 +37,22 @@
 static int
 read_value(avro_reader_t reader, avro_value_t *dest);
 
+static int
+read_array_chunk_value(avro_reader_t reader, avro_value_t *dest)
+{
+	int  rval;
+	struct avro_chunk_t* chunk = avro_value_current_chunk(dest);
+	avro_reader_file_fseek(reader, chunk->begin);
+
+	while(avro_reader_file_ftell(reader) < chunk->end)
+	{
+		avro_value_t  child;
+		check(rval, avro_value_append(dest, &child, NULL));
+		check(rval, read_value(reader, &child));
+	}
+
+	return 0;
+}
 
 static int
 read_array_value(avro_reader_t reader, avro_value_t *dest)
@@ -48,15 +64,15 @@ read_array_value(avro_reader_t reader, avro_value_t *dest)
 	int64_t  block_size;
 
 	check_prefix(rval, avro_binary_encoding.
-		     read_long(reader, &block_count),
-		     "Cannot read array block count: ");
+			read_long(reader, &block_count),
+	             "Cannot read array block count: ");
 
 	while (block_count != 0) {
 		if (block_count < 0) {
 			block_count = block_count * -1;
 			check_prefix(rval, avro_binary_encoding.
-				     read_long(reader, &block_size),
-				     "Cannot read array block size: ");
+					read_long(reader, &block_size),
+			             "Cannot read array block size: ");
 		}
 
 		for (i = 0; i < (size_t) block_count; i++, index++) {
@@ -67,8 +83,8 @@ read_array_value(avro_reader_t reader, avro_value_t *dest)
 		}
 
 		check_prefix(rval, avro_binary_encoding.
-			     read_long(reader, &block_count),
-			     "Cannot read array block count: ");
+				read_long(reader, &block_count),
+		             "Cannot read array block count: ");
 	}
 
 	return 0;
@@ -85,14 +101,14 @@ read_map_value(avro_reader_t reader, avro_value_t *dest)
 	int64_t  block_size;
 
 	check_prefix(rval, avro_binary_encoding.read_long(reader, &block_count),
-		     "Cannot read map block count: ");
+	             "Cannot read map block count: ");
 
 	while (block_count != 0) {
 		if (block_count < 0) {
 			block_count = block_count * -1;
 			check_prefix(rval, avro_binary_encoding.
-				     read_long(reader, &block_size),
-				     "Cannot read map block size: ");
+					read_long(reader, &block_size),
+			             "Cannot read map block size: ");
 		}
 
 		for (i = 0; i < (size_t) block_count; i++, index++) {
@@ -101,8 +117,8 @@ read_map_value(avro_reader_t reader, avro_value_t *dest)
 			avro_value_t  child;
 
 			check_prefix(rval, avro_binary_encoding.
-				     read_string(reader, &key, &key_size),
-				     "Cannot read map key: ");
+					read_string(reader, &key, &key_size),
+			             "Cannot read map key: ");
 
 			rval = avro_value_add(dest, key, &child, NULL, NULL);
 			if (rval) {
@@ -120,8 +136,8 @@ read_map_value(avro_reader_t reader, avro_value_t *dest)
 		}
 
 		check_prefix(rval, avro_binary_encoding.
-			     read_long(reader, &block_count),
-			     "Cannot read map block count: ");
+				read_long(reader, &block_count),
+		             "Cannot read map block count: ");
 	}
 
 	return 0;
@@ -146,7 +162,7 @@ read_record_value(avro_reader_t reader, avro_value_t *dest)
 			check(rval, read_value(reader, &field));
 		} else {
 			avro_schema_t  field_schema =
-			    avro_schema_record_field_get_by_index(record_schema, i);
+					avro_schema_record_field_get_by_index(record_schema, i);
 			check(rval, avro_skip_data(reader, field_schema));
 		}
 	}
@@ -165,15 +181,15 @@ read_union_value(avro_reader_t reader, avro_value_t *dest)
 	avro_value_t  branch;
 
 	check_prefix(rval, avro_binary_encoding.
-		     read_long(reader, &discriminant),
-		     "Cannot read union discriminant: ");
+			read_long(reader, &discriminant),
+	             "Cannot read union discriminant: ");
 
 	union_schema = avro_value_get_schema(dest);
 	branch_count = avro_schema_union_size(union_schema);
 
 	if (discriminant < 0 || discriminant >= branch_count) {
 		avro_set_error("Invalid union discriminant value: (%d)",
-			       discriminant);
+		               discriminant);
 		return 1;
 	}
 
@@ -203,7 +219,7 @@ avro_wrapped_alloc_free(avro_wrapped_buffer_t *self)
 
 static int
 avro_wrapped_alloc_new(avro_wrapped_buffer_t *dest,
-		       const void *buf, size_t length)
+                       const void *buf, size_t length)
 {
 	struct avro_wrapped_alloc  *alloc = (struct avro_wrapped_alloc *) avro_new(struct avro_wrapped_alloc);
 	if (alloc == NULL) {
@@ -233,8 +249,8 @@ read_value(avro_reader_t reader, avro_value_t *dest)
 		{
 			int8_t  val;
 			check_prefix(rval, avro_binary_encoding.
-				     read_boolean(reader, &val),
-				     "Cannot read boolean value: ");
+					read_boolean(reader, &val),
+			             "Cannot read boolean value: ");
 			return avro_value_set_boolean(dest, val);
 		}
 
@@ -243,8 +259,8 @@ read_value(avro_reader_t reader, avro_value_t *dest)
 			char  *bytes;
 			int64_t  len;
 			check_prefix(rval, avro_binary_encoding.
-				     read_bytes(reader, &bytes, &len),
-				     "Cannot read bytes value: ");
+					read_bytes(reader, &bytes, &len),
+			             "Cannot read bytes value: ");
 
 			/*
 			 * read_bytes allocates an extra byte to always
@@ -264,8 +280,8 @@ read_value(avro_reader_t reader, avro_value_t *dest)
 		{
 			double  val;
 			check_prefix(rval, avro_binary_encoding.
-				     read_double(reader, &val),
-				     "Cannot read double value: ");
+					read_double(reader, &val),
+			             "Cannot read double value: ");
 			return avro_value_set_double(dest, val);
 		}
 
@@ -273,8 +289,8 @@ read_value(avro_reader_t reader, avro_value_t *dest)
 		{
 			float  val;
 			check_prefix(rval, avro_binary_encoding.
-				     read_float(reader, &val),
-				     "Cannot read float value: ");
+					read_float(reader, &val),
+			             "Cannot read float value: ");
 			return avro_value_set_float(dest, val);
 		}
 
@@ -282,8 +298,8 @@ read_value(avro_reader_t reader, avro_value_t *dest)
 		{
 			int32_t  val;
 			check_prefix(rval, avro_binary_encoding.
-				     read_int(reader, &val),
-				     "Cannot read int value: ");
+					read_int(reader, &val),
+			             "Cannot read int value: ");
 			return avro_value_set_int(dest, val);
 		}
 
@@ -291,16 +307,16 @@ read_value(avro_reader_t reader, avro_value_t *dest)
 		{
 			int64_t  val;
 			check_prefix(rval, avro_binary_encoding.
-				     read_long(reader, &val),
-				     "Cannot read long value: ");
+					read_long(reader, &val),
+			             "Cannot read long value: ");
 			return avro_value_set_long(dest, val);
 		}
 
 		case AVRO_NULL:
 		{
 			check_prefix(rval, avro_binary_encoding.
-				     read_null(reader),
-				     "Cannot read null value: ");
+					read_null(reader),
+			             "Cannot read null value: ");
 			return avro_value_set_null(dest);
 		}
 
@@ -316,8 +332,8 @@ read_value(avro_reader_t reader, avro_value_t *dest)
 			 */
 
 			check_prefix(rval, avro_binary_encoding.
-				     read_string(reader, &str, &size),
-				     "Cannot read string value: ");
+					read_string(reader, &str, &size),
+			             "Cannot read string value: ");
 
 			avro_wrapped_buffer_t  buf;
 			check(rval, avro_wrapped_alloc_new(&buf, str, size));
@@ -325,14 +341,19 @@ read_value(avro_reader_t reader, avro_value_t *dest)
 		}
 
 		case AVRO_ARRAY:
+			if (avro_value_current_chunk(dest))
+			{
+				return read_array_chunk_value(reader, dest);
+			}
+
 			return read_array_value(reader, dest);
 
 		case AVRO_ENUM:
 		{
 			int64_t  val;
 			check_prefix(rval, avro_binary_encoding.
-				     read_long(reader, &val),
-				     "Cannot read enum value: ");
+					read_long(reader, &val),
+			             "Cannot read enum value: ");
 			return avro_value_set_enum(dest, val);
 		}
 

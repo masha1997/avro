@@ -31,6 +31,7 @@ extern "C" {
 #include <avro/legacy.h>
 #include <avro/schema.h>
 #include <avro/value.h>
+#include <stdbool.h>
 
 typedef struct avro_reader_t_ *avro_reader_t;
 typedef struct avro_writer_t_ *avro_writer_t;
@@ -41,6 +42,8 @@ typedef struct avro_writer_t_ *avro_writer_t;
 
 avro_reader_t avro_reader_file(FILE * fp);
 avro_reader_t avro_reader_file_fp(FILE * fp, int should_close);
+long int avro_reader_file_ftell(avro_reader_t reader);
+int avro_reader_file_fseek(avro_reader_t reader, long int new_position);
 avro_writer_t avro_writer_file(FILE * fp);
 avro_writer_t avro_writer_file_fp(FILE * fp, int should_close);
 avro_reader_t avro_reader_memory(const char *buf, int64_t len);
@@ -97,23 +100,27 @@ avro_value_sizeof(avro_value_t *src, size_t *size);
 
 /* File object container */
 typedef struct avro_file_reader_t_ *avro_file_reader_t;
+typedef struct avro_file_buffer_reader_t_ *avro_file_buffer_reader_t;
 typedef struct avro_file_writer_t_ *avro_file_writer_t;
 
 int avro_file_writer_create(const char *path, avro_schema_t schema,
-			    avro_file_writer_t * writer);
+                            avro_file_writer_t * writer);
 int avro_file_writer_create_fp(FILE *fp, const char *path, int should_close,
-				avro_schema_t schema, avro_file_writer_t * writer);
+                               avro_schema_t schema, avro_file_writer_t * writer);
 int avro_file_writer_create_with_codec(const char *path,
-				avro_schema_t schema, avro_file_writer_t * writer,
-				const char *codec, size_t block_size);
+                                       avro_schema_t schema, avro_file_writer_t * writer,
+                                       const char *codec, size_t block_size);
 int avro_file_writer_create_with_codec_fp(FILE *fp, const char *path, int should_close,
-				avro_schema_t schema, avro_file_writer_t * writer,
-				const char *codec, size_t block_size);
+                                          avro_schema_t schema, avro_file_writer_t * writer,
+                                          const char *codec, size_t block_size);
 int avro_file_writer_open(const char *path, avro_file_writer_t * writer);
 int avro_file_writer_open_bs(const char *path, avro_file_writer_t * writer, size_t block_size);
 int avro_file_reader(const char *path, avro_file_reader_t * reader);
+int avro_file_buffer_reader(const char *path, avro_file_buffer_reader_t * reader);
 int avro_file_reader_fp(FILE *fp, const char *path, int should_close,
-			avro_file_reader_t * reader);
+                        avro_file_reader_t * reader);
+int avro_file_buffer_reader_fp(FILE *fp, const char *path, int should_close,
+                               avro_file_buffer_reader_t * reader);
 
 avro_schema_t
 avro_file_reader_get_writer_schema(avro_file_reader_t reader);
@@ -123,6 +130,7 @@ int avro_file_writer_flush(avro_file_writer_t writer);
 int avro_file_writer_close(avro_file_writer_t writer);
 
 int avro_file_reader_close(avro_file_reader_t reader);
+int avro_file_buffer_reader_close(avro_file_buffer_reader_t reader);
 
 int
 avro_file_reader_read_value(avro_file_reader_t reader, avro_value_t *dest);
@@ -132,25 +140,32 @@ avro_file_writer_append_value(avro_file_writer_t writer, avro_value_t *src);
 
 int
 avro_file_writer_append_encoded(avro_file_writer_t writer,
-				const void *buf, int64_t len);
+                                const void *buf, int64_t len);
 
 /*
  * Legacy avro_datum_t API
  */
 
 int avro_read_data(avro_reader_t reader,
-		   avro_schema_t writer_schema,
-		   avro_schema_t reader_schema, avro_datum_t * datum);
+                   avro_schema_t writer_schema,
+                   avro_schema_t reader_schema, avro_datum_t * datum);
 int avro_skip_data(avro_reader_t reader, avro_schema_t writer_schema);
+int avro_map_data(avro_reader_t reader, avro_schema_t writer_schema, avro_datum_t ** mapped_datum);
 int avro_write_data(avro_writer_t writer,
-		    avro_schema_t writer_schema, avro_datum_t datum);
+                    avro_schema_t writer_schema, avro_datum_t datum);
 int64_t avro_size_data(avro_writer_t writer,
-		       avro_schema_t writer_schema, avro_datum_t datum);
+                       avro_schema_t writer_schema, avro_datum_t datum);
 
 int avro_file_writer_append(avro_file_writer_t writer, avro_datum_t datum);
 
 int avro_file_reader_read(avro_file_reader_t reader,
-			  avro_schema_t readers_schema, avro_datum_t * datum);
+                          avro_schema_t readers_schema, avro_datum_t * datum);
+bool avro_file_reader_subschema_read_chunk(avro_file_buffer_reader_t r,
+                                           long int begin_offset,
+                                           long int end_offset,
+                                           const char* subschema_name,
+                                           avro_datum_t * datum);
+int create_fields_mapping_block_schema(avro_file_buffer_reader_t r, avro_datum_t ** mapped_datum);
 
 CLOSE_EXTERN
 #endif

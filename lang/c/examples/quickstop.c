@@ -25,214 +25,69 @@
 #define QUICKSTOP_CODEC  "null"
 #endif
 
-avro_schema_t person_schema;
-int64_t id = 0;
+avro_schema_t pgd_data_map_schema;
 
-/* A simple schema for our tutorial */
-const char  PERSON_SCHEMA[] =
-"{\"type\":\"record\",\
-  \"name\":\"Person\",\
-  \"fields\":[\
-     {\"name\": \"ID\", \"type\": \"long\"},\
-     {\"name\": \"First\", \"type\": \"string\"},\
-     {\"name\": \"Last\", \"type\": \"string\"},\
-     {\"name\": \"Phone\", \"type\": \"string\"},\
-     {\"name\": \"Age\", \"type\": \"int\"}]}";
 
-/* Parse schema into a schema data structure */
-void init_schema(void)
+void print_array(avro_file_buffer_reader_t reader, avro_datum_t mapping_datumn, char* name)
 {
-	if (avro_schema_from_json_literal(PERSON_SCHEMA, &person_schema)) {
-		fprintf(stderr, "Unable to parse person schema\n");
-		exit(EXIT_FAILURE);
+	char* json = NULL;
+	avro_datum_t array_mapping, array_chunk;
+	avro_record_get(mapping_datumn, name, &array_mapping);
+
+	fprintf(stdout, "\n========================%s========================\n", name);
+
+	for (size_t i = 0; i < (avro_array_size(array_mapping) - 1);)
+	{
+		avro_datum_t begin_datum, end_datum;
+		avro_array_get(array_mapping, i, &begin_datum);
+		avro_array_get(array_mapping, ++i, &end_datum);
+
+		int64_t begin, end;
+
+		avro_int64_get(begin_datum, &begin);
+		avro_int64_get(end_datum, &end);
+		fprintf(stdout, "QUICKSTOP: chunk{[%d] begin: %ld, end: %ld}\n",i, begin, end);
+		if (avro_file_reader_subschema_read_chunk(reader, begin, end, name, &array_chunk))
+		{
+			avro_datum_to_json(array_chunk, 1, &json);
+			avro_datum_decref(array_chunk);
+			fprintf(stdout, "QUICKSTOP: size[%lu]  : %s\n", avro_array_size(array_chunk), json);
+			free(json);
+			avro_datum_decref(array_chunk);
+		}
 	}
+
+	fprintf(stdout, "\n================================================\n");
+
 }
 
-/* Create a value to match the person schema and save it */
-void
-add_person(avro_file_writer_t db, const char *first, const char *last,
-	   const char *phone, int32_t age)
+int process_pgd_data()
 {
-	avro_value_iface_t  *person_class =
-	    avro_generic_class_from_schema(person_schema);
-
-	avro_value_t  person;
-	avro_generic_value_new(person_class, &person);
-
-	avro_value_t id_value;
-	avro_value_t first_value;
-	avro_value_t last_value;
-	avro_value_t age_value;
-	avro_value_t phone_value;
-
-	if (avro_value_get_by_name(&person, "ID", &id_value, NULL) == 0) {
-		avro_value_set_long(&id_value, ++id);
-	}
-	if (avro_value_get_by_name(&person, "First", &first_value, NULL) == 0) {
-		avro_value_set_string(&first_value, first);
-	}
-	if (avro_value_get_by_name(&person, "Last", &last_value, NULL) == 0) {
-		avro_value_set_string(&last_value, last);
-	}
-	if (avro_value_get_by_name(&person, "Age", &age_value, NULL) == 0) {
-		avro_value_set_int(&age_value, age);
-	}
-	if (avro_value_get_by_name(&person, "Phone", &phone_value, NULL) == 0) {
-		avro_value_set_string(&phone_value, phone);
-	}
-
-	if (avro_file_writer_append_value(db, &person)) {
-		fprintf(stderr,
-			"Unable to write Person value to memory buffer\nMessage: %s\n", avro_strerror());
+	const char *avro_file = "f_sgeb25868e7855fe7a1d7f446f07923744_14d_v1609459200000_ts1609474609422.avro";
+	avro_file_buffer_reader_t db;
+	if (avro_file_buffer_reader(avro_file, &db))
+	{
+		fprintf(stdout, "Error opening file: %s\n", avro_strerror());
 		exit(EXIT_FAILURE);
 	}
 
-	/* Decrement all our references to prevent memory from leaking */
-	avro_value_decref(&person);
-	avro_value_iface_decref(person_class);
-}
+	avro_datum_t* mapping_datumn;
+	char* json;
+	create_fields_mapping_block_schema(db, &mapping_datumn);
+	avro_datum_to_json(mapping_datumn, 1, &json);
+	fprintf(stdout, "QUICKSTOP:  size [%lu] : %s\n", avro_array_size(mapping_datumn), json);
+	free(json);
 
-int print_person(avro_file_reader_t db, avro_schema_t reader_schema)
-{
+	print_array(db, mapping_datumn, "showings");
+	print_array(db, mapping_datumn, "contents");
+	print_array(db, mapping_datumn, "collections");
 
-	avro_value_iface_t  *person_class =
-	    avro_generic_class_from_schema(person_schema);
-
-	avro_value_t person;
-	avro_generic_value_new(person_class, &person);
-
-	int rval;
-
-	rval = avro_file_reader_read_value(db, &person);
-	if (rval == 0) {
-		int64_t id;
-		int32_t age;
-		int32_t *p;
-		size_t size;
-		avro_value_t id_value;
-		avro_value_t first_value;
-		avro_value_t last_value;
-		avro_value_t age_value;
-		avro_value_t phone_value;
-
-		if (avro_value_get_by_name(&person, "ID", &id_value, NULL) == 0) {
-			avro_value_get_long(&id_value, &id);
-			fprintf(stdout, "%"PRId64" | ", id);
-		}
-		if (avro_value_get_by_name(&person, "First", &first_value, NULL) == 0) {
-			avro_value_get_string(&first_value, &p, &size);
-			fprintf(stdout, "%15s | ", p);
-		}
-		if (avro_value_get_by_name(&person, "Last", &last_value, NULL) == 0) {
-			avro_value_get_string(&last_value, &p, &size);
-			fprintf(stdout, "%15s | ", p);
-		}
-		if (avro_value_get_by_name(&person, "Phone", &phone_value, NULL) == 0) {
-			avro_value_get_string(&phone_value, &p, &size);
-			fprintf(stdout, "%15s | ", p);
-		}
-		if (avro_value_get_by_name(&person, "Age", &age_value, NULL) == 0) {
-			avro_value_get_int(&age_value, &age);
-			fprintf(stdout, "%"PRId32" | ", age);
-		}
-		fprintf(stdout, "\n");
-
-		/* We no longer need this memory */
-		avro_value_decref(&person);
-		avro_value_iface_decref(person_class);
-	}
-	return rval;
+	avro_file_buffer_reader_close(db);
+	return 0;
 }
 
 int main(void)
 {
-	int rval;
-	avro_file_reader_t dbreader;
-	avro_file_writer_t db;
-	avro_schema_t projection_schema, first_name_schema, phone_schema;
-	int64_t i;
-	const char *dbname = "quickstop.db";
-	char number[15] = {0};
-
-	/* Initialize the schema structure from JSON */
-	init_schema();
-
-	/* Delete the database if it exists */
-	remove(dbname);
-	/* Create a new database */
-	rval = avro_file_writer_create_with_codec
-	    (dbname, person_schema, &db, QUICKSTOP_CODEC, 0);
-	if (rval) {
-		fprintf(stderr, "There was an error creating %s\n", dbname);
-		fprintf(stderr, " error message: %s\n", avro_strerror());
-		exit(EXIT_FAILURE);
-	}
-
-	/* Add lots of people to the database */
-	for (i = 0; i < 1000; i++)
-	{
-		sprintf(number, "(%d)", (int)i);
-		add_person(db, "Dante", "Hicks", number, 32);
-		add_person(db, "Randal", "Graves", "(555) 123-5678", 30);
-		add_person(db, "Veronica", "Loughran", "(555) 123-0987", 28);
-		add_person(db, "Caitlin", "Bree", "(555) 123-2323", 27);
-		add_person(db, "Bob", "Silent", "(555) 123-6422", 29);
-		add_person(db, "Jay", "???", number, 26);
-	}
-
-	/* Close the block and open a new one */
-	avro_file_writer_flush(db);
-	add_person(db, "Super", "Man", "123456", 31);
-
-	avro_file_writer_close(db);
-
-	fprintf(stdout, "\nNow let's read all the records back out\n");
-
-	/* Read all the records and print them */
-	if (avro_file_reader(dbname, &dbreader)) {
-		fprintf(stderr, "Error opening file: %s\n", avro_strerror());
-		exit(EXIT_FAILURE);
-	}
-	for (i = 0; i < id; i++) {
-		if (print_person(dbreader, NULL)) {
-			fprintf(stderr, "Error printing person\nMessage: %s\n", avro_strerror());
-			exit(EXIT_FAILURE);
-		}
-	}
-	avro_file_reader_close(dbreader);
-
-	/* You can also use projection, to only decode only the data you are
-	   interested in.  This is particularly useful when you have 
-	   huge data sets and you'll only interest in particular fields
-	   e.g. your contacts First name and phone number */
-	projection_schema = avro_schema_record("Person", NULL);
-	first_name_schema = avro_schema_string();
-	phone_schema = avro_schema_string();
-	avro_schema_record_field_append(projection_schema, "First",
-					first_name_schema);
-	avro_schema_record_field_append(projection_schema, "Phone",
-					phone_schema);
-
-	/* Read only the record you're interested in */
-	fprintf(stdout,
-		"\n\nUse projection to print only the First name and phone numbers\n");
-	if (avro_file_reader(dbname, &dbreader)) {
-		fprintf(stderr, "Error opening file: %s\n", avro_strerror());
-		exit(EXIT_FAILURE);
-	}
-	for (i = 0; i < id; i++) {
-		if (print_person(dbreader, projection_schema)) {
-			fprintf(stderr, "Error printing person: %s\n",
-				avro_strerror());
-			exit(EXIT_FAILURE);
-		}
-	}
-	avro_file_reader_close(dbreader);
-	avro_schema_decref(first_name_schema);
-	avro_schema_decref(phone_schema);
-	avro_schema_decref(projection_schema);
-
-	/* We don't need this schema anymore */
-	avro_schema_decref(person_schema);
+	process_pgd_data();
 	return 0;
 }

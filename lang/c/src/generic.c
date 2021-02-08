@@ -43,7 +43,7 @@ typedef struct memoize_state_t {
 
 static avro_generic_value_iface_t *
 avro_generic_class_from_schema_memoized(avro_schema_t schema,
-					memoize_state_t *state);
+                                        memoize_state_t *state);
 
 
 /*-----------------------------------------------------------------------
@@ -55,7 +55,7 @@ avro_generic_value_new(avro_value_iface_t *iface, avro_value_t *dest)
 {
 	int  rval;
 	avro_generic_value_iface_t  *giface =
-	    container_of(iface, avro_generic_value_iface_t, parent);
+			container_of(iface, avro_generic_value_iface_t, parent);
 	size_t  instance_size = avro_value_instance_size(giface);
 	void  *self = avro_malloc(instance_size + sizeof(volatile int));
 	if (self == NULL) {
@@ -87,7 +87,7 @@ avro_generic_value_free(const avro_value_iface_t *iface, void *self)
 {
 	if (self != NULL) {
 		const avro_generic_value_iface_t  *giface =
-		    container_of(iface, avro_generic_value_iface_t, parent);
+				container_of(iface, avro_generic_value_iface_t, parent);
 		size_t  instance_size = avro_value_instance_size(giface);
 		avro_value_done(giface, self);
 		self = (char *) self - sizeof(volatile int);
@@ -169,7 +169,7 @@ static avro_value_iface_t *
 avro_generic_link_incref_iface(avro_value_iface_t *viface)
 {
 	avro_generic_link_value_iface_t  *iface =
-	    container_of(viface, avro_generic_link_value_iface_t, parent);
+			container_of(viface, avro_generic_link_value_iface_t, parent);
 	avro_refcount_inc(&iface->refcount);
 	return viface;
 }
@@ -178,7 +178,7 @@ static void
 avro_generic_link_decref_iface(avro_value_iface_t *viface)
 {
 	avro_generic_link_value_iface_t  *iface =
-	    container_of(viface, avro_generic_link_value_iface_t, parent.parent);
+			container_of(viface, avro_generic_link_value_iface_t, parent.parent);
 
 	if (avro_refcount_dec(&iface->refcount)) {
 		/* We don't keep a reference to the target
@@ -219,7 +219,7 @@ avro_generic_link_get_schema(const avro_value_iface_t *viface, const void *vself
 
 static int
 avro_generic_link_get_boolean(const avro_value_iface_t *iface,
-			      const void *vself, int *out)
+                              const void *vself, int *out)
 {
 	AVRO_UNUSED(iface);
 	const avro_value_t  *self = (const avro_value_t *) vself;
@@ -228,7 +228,7 @@ avro_generic_link_get_boolean(const avro_value_iface_t *iface,
 
 static int
 avro_generic_link_get_bytes(const avro_value_iface_t *iface,
-			    const void *vself, const void **buf, size_t *size)
+                            const void *vself, const void **buf, size_t *size)
 {
 	AVRO_UNUSED(iface);
 	const avro_value_t  *self = (const avro_value_t *) vself;
@@ -237,7 +237,7 @@ avro_generic_link_get_bytes(const avro_value_iface_t *iface,
 
 static int
 avro_generic_link_grab_bytes(const avro_value_iface_t *iface,
-			     const void *vself, avro_wrapped_buffer_t *dest)
+                             const void *vself, avro_wrapped_buffer_t *dest)
 {
 	AVRO_UNUSED(iface);
 	const avro_value_t  *self = (const avro_value_t *) vself;
@@ -246,7 +246,7 @@ avro_generic_link_grab_bytes(const avro_value_iface_t *iface,
 
 static int
 avro_generic_link_get_double(const avro_value_iface_t *iface,
-			     const void *vself, double *out)
+                             const void *vself, double *out)
 {
 	AVRO_UNUSED(iface);
 	const avro_value_t  *self = (const avro_value_t *) vself;
@@ -255,7 +255,7 @@ avro_generic_link_get_double(const avro_value_iface_t *iface,
 
 static int
 avro_generic_link_get_float(const avro_value_iface_t *iface,
-			    const void *vself, float *out)
+                            const void *vself, float *out)
 {
 	AVRO_UNUSED(iface);
 	const avro_value_t  *self = (const avro_value_t *) vself;
@@ -264,7 +264,7 @@ avro_generic_link_get_float(const avro_value_iface_t *iface,
 
 static int
 avro_generic_link_get_int(const avro_value_iface_t *iface,
-			  const void *vself, int32_t *out)
+                          const void *vself, int32_t *out)
 {
 	AVRO_UNUSED(iface);
 	const avro_value_t  *self = (const avro_value_t *) vself;
@@ -273,7 +273,7 @@ avro_generic_link_get_int(const avro_value_iface_t *iface,
 
 static int
 avro_generic_link_get_long(const avro_value_iface_t *iface,
-			   const void *vself, int64_t *out)
+                           const void *vself, int64_t *out)
 {
 	AVRO_UNUSED(iface);
 	const avro_value_t  *self = (const avro_value_t *) vself;
@@ -290,7 +290,7 @@ avro_generic_link_get_null(const avro_value_iface_t *iface, const void *vself)
 
 static int
 avro_generic_link_get_string(const avro_value_iface_t *iface,
-			     const void *vself, const char **str, size_t *size)
+                             const void *vself, const char **str, size_t *size)
 {
 	AVRO_UNUSED(iface);
 	const avro_value_t  *self = (const avro_value_t *) vself;
@@ -299,7 +299,7 @@ avro_generic_link_get_string(const avro_value_iface_t *iface,
 
 static int
 avro_generic_link_grab_string(const avro_value_iface_t *iface,
-			      const void *vself, avro_wrapped_buffer_t *dest)
+                              const void *vself, avro_wrapped_buffer_t *dest)
 {
 	AVRO_UNUSED(iface);
 	const avro_value_t  *self = (const avro_value_t *) vself;
@@ -308,7 +308,7 @@ avro_generic_link_grab_string(const avro_value_iface_t *iface,
 
 static int
 avro_generic_link_get_enum(const avro_value_iface_t *iface,
-			   const void *vself, int *out)
+                           const void *vself, int *out)
 {
 	AVRO_UNUSED(iface);
 	const avro_value_t  *self = (const avro_value_t *) vself;
@@ -317,7 +317,7 @@ avro_generic_link_get_enum(const avro_value_iface_t *iface,
 
 static int
 avro_generic_link_get_fixed(const avro_value_iface_t *iface,
-			    const void *vself, const void **buf, size_t *size)
+                            const void *vself, const void **buf, size_t *size)
 {
 	AVRO_UNUSED(iface);
 	const avro_value_t  *self = (const avro_value_t *) vself;
@@ -326,7 +326,7 @@ avro_generic_link_get_fixed(const avro_value_iface_t *iface,
 
 static int
 avro_generic_link_grab_fixed(const avro_value_iface_t *iface,
-			     const void *vself, avro_wrapped_buffer_t *dest)
+                             const void *vself, avro_wrapped_buffer_t *dest)
 {
 	AVRO_UNUSED(iface);
 	const avro_value_t  *self = (const avro_value_t *) vself;
@@ -335,7 +335,7 @@ avro_generic_link_grab_fixed(const avro_value_iface_t *iface,
 
 static int
 avro_generic_link_set_boolean(const avro_value_iface_t *iface,
-			      void *vself, int val)
+                              void *vself, int val)
 {
 	AVRO_UNUSED(iface);
 	avro_value_t  *self = (avro_value_t *) vself;
@@ -344,7 +344,7 @@ avro_generic_link_set_boolean(const avro_value_iface_t *iface,
 
 static int
 avro_generic_link_set_bytes(const avro_value_iface_t *iface,
-			    void *vself, void *buf, size_t size)
+                            void *vself, void *buf, size_t size)
 {
 	AVRO_UNUSED(iface);
 	avro_value_t  *self = (avro_value_t *) vself;
@@ -353,7 +353,7 @@ avro_generic_link_set_bytes(const avro_value_iface_t *iface,
 
 static int
 avro_generic_link_give_bytes(const avro_value_iface_t *iface,
-			     void *vself, avro_wrapped_buffer_t *buf)
+                             void *vself, avro_wrapped_buffer_t *buf)
 {
 	AVRO_UNUSED(iface);
 	avro_value_t  *self = (avro_value_t *) vself;
@@ -362,7 +362,7 @@ avro_generic_link_give_bytes(const avro_value_iface_t *iface,
 
 static int
 avro_generic_link_set_double(const avro_value_iface_t *iface,
-			     void *vself, double val)
+                             void *vself, double val)
 {
 	AVRO_UNUSED(iface);
 	avro_value_t  *self = (avro_value_t *) vself;
@@ -371,7 +371,7 @@ avro_generic_link_set_double(const avro_value_iface_t *iface,
 
 static int
 avro_generic_link_set_float(const avro_value_iface_t *iface,
-			    void *vself, float val)
+                            void *vself, float val)
 {
 	AVRO_UNUSED(iface);
 	avro_value_t  *self = (avro_value_t *) vself;
@@ -380,7 +380,7 @@ avro_generic_link_set_float(const avro_value_iface_t *iface,
 
 static int
 avro_generic_link_set_int(const avro_value_iface_t *iface,
-			  void *vself, int32_t val)
+                          void *vself, int32_t val)
 {
 	AVRO_UNUSED(iface);
 	avro_value_t  *self = (avro_value_t *) vself;
@@ -389,7 +389,7 @@ avro_generic_link_set_int(const avro_value_iface_t *iface,
 
 static int
 avro_generic_link_set_long(const avro_value_iface_t *iface,
-			   void *vself, int64_t val)
+                           void *vself, int64_t val)
 {
 	AVRO_UNUSED(iface);
 	avro_value_t  *self = (avro_value_t *) vself;
@@ -406,7 +406,7 @@ avro_generic_link_set_null(const avro_value_iface_t *iface, void *vself)
 
 static int
 avro_generic_link_set_string(const avro_value_iface_t *iface,
-			     void *vself, const char *str)
+                             void *vself, const char *str)
 {
 	AVRO_UNUSED(iface);
 	avro_value_t  *self = (avro_value_t *) vself;
@@ -415,7 +415,7 @@ avro_generic_link_set_string(const avro_value_iface_t *iface,
 
 static int
 avro_generic_link_set_string_len(const avro_value_iface_t *iface,
-				 void *vself, const char *str, size_t size)
+                                 void *vself, const char *str, size_t size)
 {
 	AVRO_UNUSED(iface);
 	avro_value_t  *self = (avro_value_t *) vself;
@@ -424,7 +424,7 @@ avro_generic_link_set_string_len(const avro_value_iface_t *iface,
 
 static int
 avro_generic_link_give_string_len(const avro_value_iface_t *iface,
-				  void *vself, avro_wrapped_buffer_t *buf)
+                                  void *vself, avro_wrapped_buffer_t *buf)
 {
 	AVRO_UNUSED(iface);
 	avro_value_t  *self = (avro_value_t *) vself;
@@ -433,7 +433,7 @@ avro_generic_link_give_string_len(const avro_value_iface_t *iface,
 
 static int
 avro_generic_link_set_enum(const avro_value_iface_t *iface,
-			   void *vself, int val)
+                           void *vself, int val)
 {
 	AVRO_UNUSED(iface);
 	avro_value_t  *self = (avro_value_t *) vself;
@@ -442,7 +442,7 @@ avro_generic_link_set_enum(const avro_value_iface_t *iface,
 
 static int
 avro_generic_link_set_fixed(const avro_value_iface_t *iface,
-			    void *vself, void *buf, size_t size)
+                            void *vself, void *buf, size_t size)
 {
 	AVRO_UNUSED(iface);
 	avro_value_t  *self = (avro_value_t *) vself;
@@ -451,7 +451,7 @@ avro_generic_link_set_fixed(const avro_value_iface_t *iface,
 
 static int
 avro_generic_link_give_fixed(const avro_value_iface_t *iface,
-			     void *vself, avro_wrapped_buffer_t *buf)
+                             void *vself, avro_wrapped_buffer_t *buf)
 {
 	AVRO_UNUSED(iface);
 	avro_value_t  *self = (avro_value_t *) vself;
@@ -460,7 +460,7 @@ avro_generic_link_give_fixed(const avro_value_iface_t *iface,
 
 static int
 avro_generic_link_get_size(const avro_value_iface_t *iface,
-			   const void *vself, size_t *size)
+                           const void *vself, size_t *size)
 {
 	AVRO_UNUSED(iface);
 	const avro_value_t  *self = (const avro_value_t *) vself;
@@ -469,8 +469,8 @@ avro_generic_link_get_size(const avro_value_iface_t *iface,
 
 static int
 avro_generic_link_get_by_index(const avro_value_iface_t *iface,
-			       const void *vself, size_t index,
-			       avro_value_t *child, const char **name)
+                               const void *vself, size_t index,
+                               avro_value_t *child, const char **name)
 {
 	AVRO_UNUSED(iface);
 	const avro_value_t  *self = (const avro_value_t *) vself;
@@ -479,8 +479,8 @@ avro_generic_link_get_by_index(const avro_value_iface_t *iface,
 
 static int
 avro_generic_link_get_by_name(const avro_value_iface_t *iface,
-			      const void *vself, const char *name,
-			      avro_value_t *child, size_t *index)
+                              const void *vself, const char *name,
+                              avro_value_t *child, size_t *index)
 {
 	AVRO_UNUSED(iface);
 	const avro_value_t  *self = (const avro_value_t *) vself;
@@ -489,7 +489,7 @@ avro_generic_link_get_by_name(const avro_value_iface_t *iface,
 
 static int
 avro_generic_link_get_discriminant(const avro_value_iface_t *iface,
-				   const void *vself, int *out)
+                                   const void *vself, int *out)
 {
 	AVRO_UNUSED(iface);
 	const avro_value_t  *self = (const avro_value_t *) vself;
@@ -498,7 +498,7 @@ avro_generic_link_get_discriminant(const avro_value_iface_t *iface,
 
 static int
 avro_generic_link_get_current_branch(const avro_value_iface_t *iface,
-				     const void *vself, avro_value_t *branch)
+                                     const void *vself, avro_value_t *branch)
 {
 	AVRO_UNUSED(iface);
 	const avro_value_t  *self = (const avro_value_t *) vself;
@@ -507,8 +507,8 @@ avro_generic_link_get_current_branch(const avro_value_iface_t *iface,
 
 static int
 avro_generic_link_append(const avro_value_iface_t *iface,
-			 void *vself, avro_value_t *child_out,
-			 size_t *new_index)
+                         void *vself, avro_value_t *child_out,
+                         size_t *new_index)
 {
 	AVRO_UNUSED(iface);
 	avro_value_t  *self = (avro_value_t *) vself;
@@ -517,8 +517,8 @@ avro_generic_link_append(const avro_value_iface_t *iface,
 
 static int
 avro_generic_link_add(const avro_value_iface_t *iface,
-		      void *vself, const char *key,
-		      avro_value_t *child, size_t *index, int *is_new)
+                      void *vself, const char *key,
+                      avro_value_t *child, size_t *index, int *is_new)
 {
 	AVRO_UNUSED(iface);
 	avro_value_t  *self = (avro_value_t *) vself;
@@ -527,8 +527,8 @@ avro_generic_link_add(const avro_value_iface_t *iface,
 
 static int
 avro_generic_link_set_branch(const avro_value_iface_t *iface,
-			     void *vself, int discriminant,
-			     avro_value_t *branch)
+                             void *vself, int discriminant,
+                             avro_value_t *branch)
 {
 	AVRO_UNUSED(iface);
 	avro_value_t  *self = (avro_value_t *) vself;
@@ -548,11 +548,11 @@ avro_generic_link_init(const avro_value_iface_t *viface, void *vself)
 	int  rval;
 
 	avro_generic_link_value_iface_t  *iface =
-	    container_of(viface, avro_generic_link_value_iface_t, parent.parent);
+			container_of(viface, avro_generic_link_value_iface_t, parent.parent);
 
 	avro_value_t  *self = (avro_value_t *) vself;
 	ssize_t  target_instance_size =
-	    avro_value_instance_size(iface->target_giface);
+			avro_value_instance_size(iface->target_giface);
 	if (target_instance_size < 0) {
 		return EINVAL;
 	}
@@ -581,7 +581,7 @@ avro_generic_link_done(const avro_value_iface_t *iface, void *vself)
 	AVRO_UNUSED(iface);
 	avro_value_t  *self = (avro_value_t *) vself;
 	avro_generic_value_iface_t  *target_giface =
-	    container_of(self->iface, avro_generic_value_iface_t, parent);
+			container_of(self->iface, avro_generic_value_iface_t, parent);
 	size_t  target_instance_size = avro_value_instance_size(target_giface);
 	avro_value_done(target_giface, self->self);
 	avro_free(self->self, target_instance_size);
@@ -590,61 +590,61 @@ avro_generic_link_done(const avro_value_iface_t *iface, void *vself)
 }
 
 static avro_generic_value_iface_t  AVRO_GENERIC_LINK_CLASS =
-{
-	{
-		/* "class" methods */
-		avro_generic_link_incref_iface,
-		avro_generic_link_decref_iface,
-		/* general "instance" methods */
-		avro_generic_value_incref,
-		avro_generic_value_decref,
-		avro_generic_link_reset,
-		avro_generic_link_get_type,
-		avro_generic_link_get_schema,
-		/* primitive getters */
-		avro_generic_link_get_boolean,
-		avro_generic_link_get_bytes,
-		avro_generic_link_grab_bytes,
-		avro_generic_link_get_double,
-		avro_generic_link_get_float,
-		avro_generic_link_get_int,
-		avro_generic_link_get_long,
-		avro_generic_link_get_null,
-		avro_generic_link_get_string,
-		avro_generic_link_grab_string,
-		avro_generic_link_get_enum,
-		avro_generic_link_get_fixed,
-		avro_generic_link_grab_fixed,
-		/* primitive setters */
-		avro_generic_link_set_boolean,
-		avro_generic_link_set_bytes,
-		avro_generic_link_give_bytes,
-		avro_generic_link_set_double,
-		avro_generic_link_set_float,
-		avro_generic_link_set_int,
-		avro_generic_link_set_long,
-		avro_generic_link_set_null,
-		avro_generic_link_set_string,
-		avro_generic_link_set_string_len,
-		avro_generic_link_give_string_len,
-		avro_generic_link_set_enum,
-		avro_generic_link_set_fixed,
-		avro_generic_link_give_fixed,
-		/* compound getters */
-		avro_generic_link_get_size,
-		avro_generic_link_get_by_index,
-		avro_generic_link_get_by_name,
-		avro_generic_link_get_discriminant,
-		avro_generic_link_get_current_branch,
-		/* compound setters */
-		avro_generic_link_append,
-		avro_generic_link_add,
-		avro_generic_link_set_branch
-	},
-	avro_generic_link_instance_size,
-	avro_generic_link_init,
-	avro_generic_link_done
-};
+		{
+				{
+						/* "class" methods */
+						avro_generic_link_incref_iface,
+						avro_generic_link_decref_iface,
+						/* general "instance" methods */
+						avro_generic_value_incref,
+						avro_generic_value_decref,
+						avro_generic_link_reset,
+						avro_generic_link_get_type,
+						avro_generic_link_get_schema,
+						/* primitive getters */
+						avro_generic_link_get_boolean,
+						avro_generic_link_get_bytes,
+						avro_generic_link_grab_bytes,
+						avro_generic_link_get_double,
+						avro_generic_link_get_float,
+						avro_generic_link_get_int,
+						avro_generic_link_get_long,
+						avro_generic_link_get_null,
+						avro_generic_link_get_string,
+						avro_generic_link_grab_string,
+						avro_generic_link_get_enum,
+						avro_generic_link_get_fixed,
+						avro_generic_link_grab_fixed,
+						/* primitive setters */
+						avro_generic_link_set_boolean,
+						avro_generic_link_set_bytes,
+						avro_generic_link_give_bytes,
+						avro_generic_link_set_double,
+						avro_generic_link_set_float,
+						avro_generic_link_set_int,
+						avro_generic_link_set_long,
+						avro_generic_link_set_null,
+						avro_generic_link_set_string,
+						avro_generic_link_set_string_len,
+						avro_generic_link_give_string_len,
+						avro_generic_link_set_enum,
+						avro_generic_link_set_fixed,
+						avro_generic_link_give_fixed,
+						/* compound getters */
+						avro_generic_link_get_size,
+						avro_generic_link_get_by_index,
+						avro_generic_link_get_by_name,
+						avro_generic_link_get_discriminant,
+						avro_generic_link_get_current_branch,
+						/* compound setters */
+						avro_generic_link_append,
+						avro_generic_link_add,
+						avro_generic_link_set_branch
+				},
+				avro_generic_link_instance_size,
+				avro_generic_link_init,
+				avro_generic_link_done
+		};
 
 static avro_generic_link_value_iface_t *
 avro_generic_link_class(avro_schema_t schema)
@@ -655,7 +655,7 @@ avro_generic_link_class(avro_schema_t schema)
 	}
 
 	avro_generic_link_value_iface_t  *iface =
-		(avro_generic_link_value_iface_t *) avro_new(avro_generic_link_value_iface_t);
+			(avro_generic_link_value_iface_t *) avro_new(avro_generic_link_value_iface_t);
 	if (iface == NULL) {
 		return NULL;
 	}
@@ -699,7 +699,7 @@ avro_generic_boolean_get_schema(const avro_value_iface_t *iface, const void *vse
 
 static int
 avro_generic_boolean_get(const avro_value_iface_t *iface,
-			 const void *vself, int *out)
+                         const void *vself, int *out)
 {
 	AVRO_UNUSED(iface);
 	const int  *self = (const int *) vself;
@@ -709,7 +709,7 @@ avro_generic_boolean_get(const avro_value_iface_t *iface,
 
 static int
 avro_generic_boolean_set(const avro_value_iface_t *iface,
-			 void *vself, int val)
+                         void *vself, int val)
 {
 	AVRO_UNUSED(iface);
 	int  *self = (int *) vself;
@@ -741,61 +741,61 @@ avro_generic_boolean_done(const avro_value_iface_t *iface, void *vself)
 }
 
 static avro_generic_value_iface_t  AVRO_GENERIC_BOOLEAN_CLASS =
-{
-	{
-		/* "class" methods */
-		NULL, /* incref_iface */
-		NULL, /* decref_iface */
-		/* general "instance" methods */
-		avro_generic_value_incref,
-		avro_generic_value_decref,
-		avro_generic_boolean_reset,
-		avro_generic_boolean_get_type,
-		avro_generic_boolean_get_schema,
-		/* primitive getters */
-		avro_generic_boolean_get,
-		NULL, /* get_bytes */
-		NULL, /* grab_bytes */
-		NULL, /* get_double */
-		NULL, /* get_float */
-		NULL, /* get_int */
-		NULL, /* get_long */
-		NULL, /* get_null */
-		NULL, /* get_string */
-		NULL, /* grab_string */
-		NULL, /* get_enum */
-		NULL, /* get_fixed */
-		NULL, /* grab_fixed */
-		/* primitive setters */
-		avro_generic_boolean_set,
-		NULL, /* set_bytes */
-		NULL, /* give_bytes */
-		NULL, /* set_double */
-		NULL, /* set_float */
-		NULL, /* set_int */
-		NULL, /* set_long */
-		NULL, /* set_null */
-		NULL, /* set_string */
-		NULL, /* set_string_length */
-		NULL, /* give_string_length */
-		NULL, /* set_enum */
-		NULL, /* set_fixed */
-		NULL, /* give_fixed */
-		/* compound getters */
-		NULL, /* get_size */
-		NULL, /* get_by_index */
-		NULL, /* get_by_name */
-		NULL, /* get_discriminant */
-		NULL, /* get_current_branch */
-		/* compound setters */
-		NULL, /* append */
-		NULL, /* add */
-		NULL  /* set_branch */
-	},
-	avro_generic_boolean_instance_size,
-	avro_generic_boolean_init,
-	avro_generic_boolean_done
-};
+		{
+				{
+						/* "class" methods */
+						NULL, /* incref_iface */
+						NULL, /* decref_iface */
+						/* general "instance" methods */
+						avro_generic_value_incref,
+						avro_generic_value_decref,
+						avro_generic_boolean_reset,
+						avro_generic_boolean_get_type,
+						avro_generic_boolean_get_schema,
+						/* primitive getters */
+						avro_generic_boolean_get,
+						NULL, /* get_bytes */
+						NULL, /* grab_bytes */
+						NULL, /* get_double */
+						NULL, /* get_float */
+						NULL, /* get_int */
+						NULL, /* get_long */
+						NULL, /* get_null */
+						NULL, /* get_string */
+						NULL, /* grab_string */
+						NULL, /* get_enum */
+						NULL, /* get_fixed */
+						NULL, /* grab_fixed */
+						/* primitive setters */
+						avro_generic_boolean_set,
+						NULL, /* set_bytes */
+						NULL, /* give_bytes */
+						NULL, /* set_double */
+						NULL, /* set_float */
+						NULL, /* set_int */
+						NULL, /* set_long */
+						NULL, /* set_null */
+						NULL, /* set_string */
+						NULL, /* set_string_length */
+						NULL, /* give_string_length */
+						NULL, /* set_enum */
+						NULL, /* set_fixed */
+						NULL, /* give_fixed */
+						/* compound getters */
+						NULL, /* get_size */
+						NULL, /* get_by_index */
+						NULL, /* get_by_name */
+						NULL, /* get_discriminant */
+						NULL, /* get_current_branch */
+						/* compound setters */
+						NULL, /* append */
+						NULL, /* add */
+						NULL  /* set_branch */
+				},
+				avro_generic_boolean_instance_size,
+				avro_generic_boolean_init,
+				avro_generic_boolean_done
+		};
 
 avro_value_iface_t *
 avro_generic_boolean_class(void)
@@ -842,7 +842,7 @@ avro_generic_bytes_get_schema(const avro_value_iface_t *iface, const void *vself
 
 static int
 avro_generic_bytes_get(const avro_value_iface_t *iface,
-		       const void *vself, const void **buf, size_t *size)
+                       const void *vself, const void **buf, size_t *size)
 {
 	AVRO_UNUSED(iface);
 	const avro_raw_string_t  *self = (const avro_raw_string_t *) vself;
@@ -857,7 +857,7 @@ avro_generic_bytes_get(const avro_value_iface_t *iface,
 
 static int
 avro_generic_bytes_grab(const avro_value_iface_t *iface,
-			const void *vself, avro_wrapped_buffer_t *dest)
+                        const void *vself, avro_wrapped_buffer_t *dest)
 {
 	AVRO_UNUSED(iface);
 	const avro_raw_string_t  *self = (const avro_raw_string_t *) vself;
@@ -866,7 +866,7 @@ avro_generic_bytes_grab(const avro_value_iface_t *iface,
 
 static int
 avro_generic_bytes_set(const avro_value_iface_t *iface,
-		       void *vself, void *buf, size_t size)
+                       void *vself, void *buf, size_t size)
 {
 	AVRO_UNUSED(iface);
 	check_param(EINVAL, buf != NULL, "bytes contents");
@@ -877,7 +877,7 @@ avro_generic_bytes_set(const avro_value_iface_t *iface,
 
 static int
 avro_generic_bytes_give(const avro_value_iface_t *iface,
-			void *vself, avro_wrapped_buffer_t *buf)
+                        void *vself, avro_wrapped_buffer_t *buf)
 {
 	AVRO_UNUSED(iface);
 	avro_raw_string_t  *self = (avro_raw_string_t *) vself;
@@ -910,61 +910,61 @@ avro_generic_bytes_done(const avro_value_iface_t *iface, void *vself)
 }
 
 static avro_generic_value_iface_t  AVRO_GENERIC_BYTES_CLASS =
-{
-	{
-		/* "class" methods */
-		NULL, /* incref_iface */
-		NULL, /* decref_iface */
-		/* general "instance" methods */
-		avro_generic_value_incref,
-		avro_generic_value_decref,
-		avro_generic_bytes_reset,
-		avro_generic_bytes_get_type,
-		avro_generic_bytes_get_schema,
-		/* primitive getters */
-		NULL, /* get_boolean */
-		avro_generic_bytes_get,
-		avro_generic_bytes_grab,
-		NULL, /* get_double */
-		NULL, /* get_float */
-		NULL, /* get_int */
-		NULL, /* get_long */
-		NULL, /* get_null */
-		NULL, /* get_string */
-		NULL, /* grab_string */
-		NULL, /* get_enum */
-		NULL, /* get_fixed */
-		NULL, /* grab_fixed */
-		/* primitive setters */
-		NULL, /* set_boolean */
-		avro_generic_bytes_set,
-		avro_generic_bytes_give,
-		NULL, /* set_double */
-		NULL, /* set_float */
-		NULL, /* set_int */
-		NULL, /* set_long */
-		NULL, /* set_null */
-		NULL, /* set_string */
-		NULL, /* set_string_length */
-		NULL, /* give_string_length */
-		NULL, /* set_enum */
-		NULL, /* set_fixed */
-		NULL, /* give_fixed */
-		/* compound getters */
-		NULL, /* get_size */
-		NULL, /* get_by_index */
-		NULL, /* get_by_name */
-		NULL, /* get_discriminant */
-		NULL, /* get_current_branch */
-		/* compound setters */
-		NULL, /* append */
-		NULL, /* add */
-		NULL  /* set_branch */
-	},
-	avro_generic_bytes_instance_size,
-	avro_generic_bytes_init,
-	avro_generic_bytes_done
-};
+		{
+				{
+						/* "class" methods */
+						NULL, /* incref_iface */
+						NULL, /* decref_iface */
+						/* general "instance" methods */
+						avro_generic_value_incref,
+						avro_generic_value_decref,
+						avro_generic_bytes_reset,
+						avro_generic_bytes_get_type,
+						avro_generic_bytes_get_schema,
+						/* primitive getters */
+						NULL, /* get_boolean */
+						avro_generic_bytes_get,
+						avro_generic_bytes_grab,
+						NULL, /* get_double */
+						NULL, /* get_float */
+						NULL, /* get_int */
+						NULL, /* get_long */
+						NULL, /* get_null */
+						NULL, /* get_string */
+						NULL, /* grab_string */
+						NULL, /* get_enum */
+						NULL, /* get_fixed */
+						NULL, /* grab_fixed */
+						/* primitive setters */
+						NULL, /* set_boolean */
+						avro_generic_bytes_set,
+						avro_generic_bytes_give,
+						NULL, /* set_double */
+						NULL, /* set_float */
+						NULL, /* set_int */
+						NULL, /* set_long */
+						NULL, /* set_null */
+						NULL, /* set_string */
+						NULL, /* set_string_length */
+						NULL, /* give_string_length */
+						NULL, /* set_enum */
+						NULL, /* set_fixed */
+						NULL, /* give_fixed */
+						/* compound getters */
+						NULL, /* get_size */
+						NULL, /* get_by_index */
+						NULL, /* get_by_name */
+						NULL, /* get_discriminant */
+						NULL, /* get_current_branch */
+						/* compound setters */
+						NULL, /* append */
+						NULL, /* add */
+						NULL  /* set_branch */
+				},
+				avro_generic_bytes_instance_size,
+				avro_generic_bytes_init,
+				avro_generic_bytes_done
+		};
 
 avro_value_iface_t *
 avro_generic_bytes_class(void)
@@ -1011,7 +1011,7 @@ avro_generic_double_get_schema(const avro_value_iface_t *iface, const void *vsel
 
 static int
 avro_generic_double_get(const avro_value_iface_t *iface,
-			const void *vself, double *out)
+                        const void *vself, double *out)
 {
 	AVRO_UNUSED(iface);
 	const double  *self = (const double *) vself;
@@ -1021,7 +1021,7 @@ avro_generic_double_get(const avro_value_iface_t *iface,
 
 static int
 avro_generic_double_set(const avro_value_iface_t *iface,
-			void *vself, double val)
+                        void *vself, double val)
 {
 	AVRO_UNUSED(iface);
 	double  *self = (double *) vself;
@@ -1053,61 +1053,61 @@ avro_generic_double_done(const avro_value_iface_t *iface, void *vself)
 }
 
 static avro_generic_value_iface_t  AVRO_GENERIC_DOUBLE_CLASS =
-{
-	{
-		/* "class" methods */
-		NULL, /* incref_iface */
-		NULL, /* decref_iface */
-		/* general "instance" methods */
-		avro_generic_value_incref,
-		avro_generic_value_decref,
-		avro_generic_double_reset,
-		avro_generic_double_get_type,
-		avro_generic_double_get_schema,
-		/* primitive getters */
-		NULL, /* get_boolean */
-		NULL, /* get_bytes */
-		NULL, /* grab_bytes */
-		avro_generic_double_get,
-		NULL, /* get_float */
-		NULL, /* get_int */
-		NULL, /* get_long */
-		NULL, /* get_null */
-		NULL, /* get_string */
-		NULL, /* grab_string */
-		NULL, /* get_enum */
-		NULL, /* get_fixed */
-		NULL, /* grab_fixed */
-		/* primitive setters */
-		NULL, /* set_boolean */
-		NULL, /* set_bytes */
-		NULL, /* give_bytes */
-		avro_generic_double_set,
-		NULL, /* set_float */
-		NULL, /* set_int */
-		NULL, /* set_long */
-		NULL, /* set_null */
-		NULL, /* set_string */
-		NULL, /* set_string_length */
-		NULL, /* give_string_length */
-		NULL, /* set_enum */
-		NULL, /* set_fixed */
-		NULL, /* give_fixed */
-		/* compound getters */
-		NULL, /* get_size */
-		NULL, /* get_by_index */
-		NULL, /* get_by_name */
-		NULL, /* get_discriminant */
-		NULL, /* get_current_branch */
-		/* compound setters */
-		NULL, /* append */
-		NULL, /* add */
-		NULL  /* set_branch */
-	},
-	avro_generic_double_instance_size,
-	avro_generic_double_init,
-	avro_generic_double_done
-};
+		{
+				{
+						/* "class" methods */
+						NULL, /* incref_iface */
+						NULL, /* decref_iface */
+						/* general "instance" methods */
+						avro_generic_value_incref,
+						avro_generic_value_decref,
+						avro_generic_double_reset,
+						avro_generic_double_get_type,
+						avro_generic_double_get_schema,
+						/* primitive getters */
+						NULL, /* get_boolean */
+						NULL, /* get_bytes */
+						NULL, /* grab_bytes */
+						avro_generic_double_get,
+						NULL, /* get_float */
+						NULL, /* get_int */
+						NULL, /* get_long */
+						NULL, /* get_null */
+						NULL, /* get_string */
+						NULL, /* grab_string */
+						NULL, /* get_enum */
+						NULL, /* get_fixed */
+						NULL, /* grab_fixed */
+						/* primitive setters */
+						NULL, /* set_boolean */
+						NULL, /* set_bytes */
+						NULL, /* give_bytes */
+						avro_generic_double_set,
+						NULL, /* set_float */
+						NULL, /* set_int */
+						NULL, /* set_long */
+						NULL, /* set_null */
+						NULL, /* set_string */
+						NULL, /* set_string_length */
+						NULL, /* give_string_length */
+						NULL, /* set_enum */
+						NULL, /* set_fixed */
+						NULL, /* give_fixed */
+						/* compound getters */
+						NULL, /* get_size */
+						NULL, /* get_by_index */
+						NULL, /* get_by_name */
+						NULL, /* get_discriminant */
+						NULL, /* get_current_branch */
+						/* compound setters */
+						NULL, /* append */
+						NULL, /* add */
+						NULL  /* set_branch */
+				},
+				avro_generic_double_instance_size,
+				avro_generic_double_init,
+				avro_generic_double_done
+		};
 
 avro_value_iface_t *
 avro_generic_double_class(void)
@@ -1154,7 +1154,7 @@ avro_generic_float_get_schema(const avro_value_iface_t *iface, const void *vself
 
 static int
 avro_generic_float_get(const avro_value_iface_t *iface,
-		       const void *vself, float *out)
+                       const void *vself, float *out)
 {
 	AVRO_UNUSED(iface);
 	const float  *self = (const float *) vself;
@@ -1164,7 +1164,7 @@ avro_generic_float_get(const avro_value_iface_t *iface,
 
 static int
 avro_generic_float_set(const avro_value_iface_t *iface,
-		       void *vself, float val)
+                       void *vself, float val)
 {
 	AVRO_UNUSED(iface);
 	float  *self = (float *) vself;
@@ -1196,61 +1196,61 @@ avro_generic_float_done(const avro_value_iface_t *iface, void *vself)
 }
 
 static avro_generic_value_iface_t  AVRO_GENERIC_FLOAT_CLASS =
-{
-	{
-		/* "class" methods */
-		NULL, /* incref_iface */
-		NULL, /* decref_iface */
-		/* general "instance" methods */
-		avro_generic_value_incref,
-		avro_generic_value_decref,
-		avro_generic_float_reset,
-		avro_generic_float_get_type,
-		avro_generic_float_get_schema,
-		/* primitive getters */
-		NULL, /* get_boolean */
-		NULL, /* get_bytes */
-		NULL, /* grab_bytes */
-		NULL, /* get_double */
-		avro_generic_float_get,
-		NULL, /* get_int */
-		NULL, /* get_long */
-		NULL, /* get_null */
-		NULL, /* get_string */
-		NULL, /* grab_string */
-		NULL, /* get_enum */
-		NULL, /* get_fixed */
-		NULL, /* grab_fixed */
-		/* primitive setters */
-		NULL, /* set_boolean */
-		NULL, /* set_bytes */
-		NULL, /* give_bytes */
-		NULL, /* set_double */
-		avro_generic_float_set,
-		NULL, /* set_int */
-		NULL, /* set_long */
-		NULL, /* set_null */
-		NULL, /* set_string */
-		NULL, /* set_string_length */
-		NULL, /* give_string_length */
-		NULL, /* set_enum */
-		NULL, /* set_fixed */
-		NULL, /* give_fixed */
-		/* compound getters */
-		NULL, /* get_size */
-		NULL, /* get_by_index */
-		NULL, /* get_by_name */
-		NULL, /* get_discriminant */
-		NULL, /* get_current_branch */
-		/* compound setters */
-		NULL, /* append */
-		NULL, /* add */
-		NULL  /* set_branch */
-	},
-	avro_generic_float_instance_size,
-	avro_generic_float_init,
-	avro_generic_float_done
-};
+		{
+				{
+						/* "class" methods */
+						NULL, /* incref_iface */
+						NULL, /* decref_iface */
+						/* general "instance" methods */
+						avro_generic_value_incref,
+						avro_generic_value_decref,
+						avro_generic_float_reset,
+						avro_generic_float_get_type,
+						avro_generic_float_get_schema,
+						/* primitive getters */
+						NULL, /* get_boolean */
+						NULL, /* get_bytes */
+						NULL, /* grab_bytes */
+						NULL, /* get_double */
+						avro_generic_float_get,
+						NULL, /* get_int */
+						NULL, /* get_long */
+						NULL, /* get_null */
+						NULL, /* get_string */
+						NULL, /* grab_string */
+						NULL, /* get_enum */
+						NULL, /* get_fixed */
+						NULL, /* grab_fixed */
+						/* primitive setters */
+						NULL, /* set_boolean */
+						NULL, /* set_bytes */
+						NULL, /* give_bytes */
+						NULL, /* set_double */
+						avro_generic_float_set,
+						NULL, /* set_int */
+						NULL, /* set_long */
+						NULL, /* set_null */
+						NULL, /* set_string */
+						NULL, /* set_string_length */
+						NULL, /* give_string_length */
+						NULL, /* set_enum */
+						NULL, /* set_fixed */
+						NULL, /* give_fixed */
+						/* compound getters */
+						NULL, /* get_size */
+						NULL, /* get_by_index */
+						NULL, /* get_by_name */
+						NULL, /* get_discriminant */
+						NULL, /* get_current_branch */
+						/* compound setters */
+						NULL, /* append */
+						NULL, /* add */
+						NULL  /* set_branch */
+				},
+				avro_generic_float_instance_size,
+				avro_generic_float_init,
+				avro_generic_float_done
+		};
 
 avro_value_iface_t *
 avro_generic_float_class(void)
@@ -1297,7 +1297,7 @@ avro_generic_int_get_schema(const avro_value_iface_t *iface, const void *vself)
 
 static int
 avro_generic_int_get(const avro_value_iface_t *iface,
-		     const void *vself, int32_t *out)
+                     const void *vself, int32_t *out)
 {
 	AVRO_UNUSED(iface);
 	const int32_t  *self = (const int32_t *) vself;
@@ -1307,7 +1307,7 @@ avro_generic_int_get(const avro_value_iface_t *iface,
 
 static int
 avro_generic_int_set(const avro_value_iface_t *iface,
-		     void *vself, int32_t val)
+                     void *vself, int32_t val)
 {
 	AVRO_UNUSED(iface);
 	int32_t  *self = (int32_t *) vself;
@@ -1339,61 +1339,61 @@ avro_generic_int_done(const avro_value_iface_t *iface, void *vself)
 }
 
 static avro_generic_value_iface_t  AVRO_GENERIC_INT_CLASS =
-{
-	{
-		/* "class" methods */
-		NULL, /* incref_iface */
-		NULL, /* decref_iface */
-		/* general "instance" methods */
-		avro_generic_value_incref,
-		avro_generic_value_decref,
-		avro_generic_int_reset,
-		avro_generic_int_get_type,
-		avro_generic_int_get_schema,
-		/* primitive getters */
-		NULL, /* get_boolean */
-		NULL, /* get_bytes */
-		NULL, /* grab_bytes */
-		NULL, /* get_double */
-		NULL, /* get_float */
-		avro_generic_int_get,
-		NULL, /* get_long */
-		NULL, /* get_null */
-		NULL, /* get_string */
-		NULL, /* grab_string */
-		NULL, /* get_enum */
-		NULL, /* get_fixed */
-		NULL, /* grab_fixed */
-		/* primitive setters */
-		NULL, /* set_boolean */
-		NULL, /* set_bytes */
-		NULL, /* give_bytes */
-		NULL, /* set_double */
-		NULL, /* set_float */
-		avro_generic_int_set,
-		NULL, /* set_long */
-		NULL, /* set_null */
-		NULL, /* set_string */
-		NULL, /* set_string_length */
-		NULL, /* give_string_length */
-		NULL, /* set_enum */
-		NULL, /* set_fixed */
-		NULL, /* give_fixed */
-		/* compound getters */
-		NULL, /* get_size */
-		NULL, /* get_by_index */
-		NULL, /* get_by_name */
-		NULL, /* get_discriminant */
-		NULL, /* get_current_branch */
-		/* compound setters */
-		NULL, /* append */
-		NULL, /* add */
-		NULL  /* set_branch */
-	},
-	avro_generic_int_instance_size,
-	avro_generic_int_init,
-	avro_generic_int_done
-};
+		{
+				{
+						/* "class" methods */
+						NULL, /* incref_iface */
+						NULL, /* decref_iface */
+						/* general "instance" methods */
+						avro_generic_value_incref,
+						avro_generic_value_decref,
+						avro_generic_int_reset,
+						avro_generic_int_get_type,
+						avro_generic_int_get_schema,
+						/* primitive getters */
+						NULL, /* get_boolean */
+						NULL, /* get_bytes */
+						NULL, /* grab_bytes */
+						NULL, /* get_double */
+						NULL, /* get_float */
+						avro_generic_int_get,
+						NULL, /* get_long */
+						NULL, /* get_null */
+						NULL, /* get_string */
+						NULL, /* grab_string */
+						NULL, /* get_enum */
+						NULL, /* get_fixed */
+						NULL, /* grab_fixed */
+						/* primitive setters */
+						NULL, /* set_boolean */
+						NULL, /* set_bytes */
+						NULL, /* give_bytes */
+						NULL, /* set_double */
+						NULL, /* set_float */
+						avro_generic_int_set,
+						NULL, /* set_long */
+						NULL, /* set_null */
+						NULL, /* set_string */
+						NULL, /* set_string_length */
+						NULL, /* give_string_length */
+						NULL, /* set_enum */
+						NULL, /* set_fixed */
+						NULL, /* give_fixed */
+						/* compound getters */
+						NULL, /* get_size */
+						NULL, /* get_by_index */
+						NULL, /* get_by_name */
+						NULL, /* get_discriminant */
+						NULL, /* get_current_branch */
+						/* compound setters */
+						NULL, /* append */
+						NULL, /* add */
+						NULL  /* set_branch */
+				},
+				avro_generic_int_instance_size,
+				avro_generic_int_init,
+				avro_generic_int_done
+		};
 
 avro_value_iface_t *
 avro_generic_int_class(void)
@@ -1440,7 +1440,7 @@ avro_generic_long_get_schema(const avro_value_iface_t *iface, const void *vself)
 
 static int
 avro_generic_long_get(const avro_value_iface_t *iface,
-		      const void *vself, int64_t *out)
+                      const void *vself, int64_t *out)
 {
 	AVRO_UNUSED(iface);
 	const int64_t  *self = (const int64_t *) vself;
@@ -1450,7 +1450,7 @@ avro_generic_long_get(const avro_value_iface_t *iface,
 
 static int
 avro_generic_long_set(const avro_value_iface_t *iface,
-		      void *vself, int64_t val)
+                      void *vself, int64_t val)
 {
 	AVRO_UNUSED(iface);
 	int64_t  *self = (int64_t *) vself;
@@ -1482,61 +1482,61 @@ avro_generic_long_done(const avro_value_iface_t *iface, void *vself)
 }
 
 static avro_generic_value_iface_t  AVRO_GENERIC_LONG_CLASS =
-{
-	{
-		/* "class" methods */
-		NULL, /* incref_iface */
-		NULL, /* decref_iface */
-		/* general "instance" methods */
-		avro_generic_value_incref,
-		avro_generic_value_decref,
-		avro_generic_long_reset,
-		avro_generic_long_get_type,
-		avro_generic_long_get_schema,
-		/* primitive getters */
-		NULL, /* get_boolean */
-		NULL, /* get_bytes */
-		NULL, /* grab_bytes */
-		NULL, /* get_double */
-		NULL, /* get_float */
-		NULL, /* get_int */
-		avro_generic_long_get,
-		NULL, /* get_null */
-		NULL, /* get_string */
-		NULL, /* grab_string */
-		NULL, /* get_enum */
-		NULL, /* get_fixed */
-		NULL, /* grab_fixed */
-		/* primitive setters */
-		NULL, /* set_boolean */
-		NULL, /* set_bytes */
-		NULL, /* give_bytes */
-		NULL, /* set_double */
-		NULL, /* set_float */
-		NULL, /* set_int */
-		avro_generic_long_set,
-		NULL, /* set_null */
-		NULL, /* set_string */
-		NULL, /* set_string_length */
-		NULL, /* give_string_length */
-		NULL, /* set_enum */
-		NULL, /* set_fixed */
-		NULL, /* give_fixed */
-		/* compound getters */
-		NULL, /* get_size */
-		NULL, /* get_by_index */
-		NULL, /* get_by_name */
-		NULL, /* get_discriminant */
-		NULL, /* get_current_branch */
-		/* compound setters */
-		NULL, /* append */
-		NULL, /* add */
-		NULL  /* set_branch */
-	},
-	avro_generic_long_instance_size,
-	avro_generic_long_init,
-	avro_generic_long_done
-};
+		{
+				{
+						/* "class" methods */
+						NULL, /* incref_iface */
+						NULL, /* decref_iface */
+						/* general "instance" methods */
+						avro_generic_value_incref,
+						avro_generic_value_decref,
+						avro_generic_long_reset,
+						avro_generic_long_get_type,
+						avro_generic_long_get_schema,
+						/* primitive getters */
+						NULL, /* get_boolean */
+						NULL, /* get_bytes */
+						NULL, /* grab_bytes */
+						NULL, /* get_double */
+						NULL, /* get_float */
+						NULL, /* get_int */
+						avro_generic_long_get,
+						NULL, /* get_null */
+						NULL, /* get_string */
+						NULL, /* grab_string */
+						NULL, /* get_enum */
+						NULL, /* get_fixed */
+						NULL, /* grab_fixed */
+						/* primitive setters */
+						NULL, /* set_boolean */
+						NULL, /* set_bytes */
+						NULL, /* give_bytes */
+						NULL, /* set_double */
+						NULL, /* set_float */
+						NULL, /* set_int */
+						avro_generic_long_set,
+						NULL, /* set_null */
+						NULL, /* set_string */
+						NULL, /* set_string_length */
+						NULL, /* give_string_length */
+						NULL, /* set_enum */
+						NULL, /* set_fixed */
+						NULL, /* give_fixed */
+						/* compound getters */
+						NULL, /* get_size */
+						NULL, /* get_by_index */
+						NULL, /* get_by_name */
+						NULL, /* get_discriminant */
+						NULL, /* get_current_branch */
+						/* compound setters */
+						NULL, /* append */
+						NULL, /* add */
+						NULL  /* set_branch */
+				},
+				avro_generic_long_instance_size,
+				avro_generic_long_init,
+				avro_generic_long_done
+		};
 
 avro_value_iface_t *
 avro_generic_long_class(void)
@@ -1621,61 +1621,61 @@ avro_generic_null_done(const avro_value_iface_t *iface, void *vself)
 }
 
 static avro_generic_value_iface_t  AVRO_GENERIC_NULL_CLASS =
-{
-	{
-		/* "class" methods */
-		NULL, /* incref_iface */
-		NULL, /* decref_iface */
-		/* general "instance" methods */
-		avro_generic_value_incref,
-		avro_generic_value_decref,
-		avro_generic_null_reset,
-		avro_generic_null_get_type,
-		avro_generic_null_get_schema,
-		/* primitive getters */
-		NULL, /* get_boolean */
-		NULL, /* get_bytes */
-		NULL, /* grab_bytes */
-		NULL, /* get_double */
-		NULL, /* get_float */
-		NULL, /* get_int */
-		NULL, /* get_long */
-		avro_generic_null_get,
-		NULL, /* get_string */
-		NULL, /* grab_string */
-		NULL, /* get_enum */
-		NULL, /* get_fixed */
-		NULL, /* grab_fixed */
-		/* primitive setters */
-		NULL, /* set_boolean */
-		NULL, /* set_bytes */
-		NULL, /* give_bytes */
-		NULL, /* set_double */
-		NULL, /* set_float */
-		NULL, /* set_int */
-		NULL, /* set_long */
-		avro_generic_null_set,
-		NULL, /* set_string */
-		NULL, /* set_string_length */
-		NULL, /* give_string_length */
-		NULL, /* set_enum */
-		NULL, /* set_fixed */
-		NULL, /* give_fixed */
-		/* compound getters */
-		NULL, /* get_size */
-		NULL, /* get_by_index */
-		NULL, /* get_by_name */
-		NULL, /* get_discriminant */
-		NULL, /* get_current_branch */
-		/* compound setters */
-		NULL, /* append */
-		NULL, /* add */
-		NULL  /* set_branch */
-	},
-	avro_generic_null_instance_size,
-	avro_generic_null_init,
-	avro_generic_null_done
-};
+		{
+				{
+						/* "class" methods */
+						NULL, /* incref_iface */
+						NULL, /* decref_iface */
+						/* general "instance" methods */
+						avro_generic_value_incref,
+						avro_generic_value_decref,
+						avro_generic_null_reset,
+						avro_generic_null_get_type,
+						avro_generic_null_get_schema,
+						/* primitive getters */
+						NULL, /* get_boolean */
+						NULL, /* get_bytes */
+						NULL, /* grab_bytes */
+						NULL, /* get_double */
+						NULL, /* get_float */
+						NULL, /* get_int */
+						NULL, /* get_long */
+						avro_generic_null_get,
+						NULL, /* get_string */
+						NULL, /* grab_string */
+						NULL, /* get_enum */
+						NULL, /* get_fixed */
+						NULL, /* grab_fixed */
+						/* primitive setters */
+						NULL, /* set_boolean */
+						NULL, /* set_bytes */
+						NULL, /* give_bytes */
+						NULL, /* set_double */
+						NULL, /* set_float */
+						NULL, /* set_int */
+						NULL, /* set_long */
+						avro_generic_null_set,
+						NULL, /* set_string */
+						NULL, /* set_string_length */
+						NULL, /* give_string_length */
+						NULL, /* set_enum */
+						NULL, /* set_fixed */
+						NULL, /* give_fixed */
+						/* compound getters */
+						NULL, /* get_size */
+						NULL, /* get_by_index */
+						NULL, /* get_by_name */
+						NULL, /* get_discriminant */
+						NULL, /* get_current_branch */
+						/* compound setters */
+						NULL, /* append */
+						NULL, /* add */
+						NULL  /* set_branch */
+				},
+				avro_generic_null_instance_size,
+				avro_generic_null_init,
+				avro_generic_null_done
+		};
 
 avro_value_iface_t *
 avro_generic_null_class(void)
@@ -1720,7 +1720,7 @@ avro_generic_string_get_schema(const avro_value_iface_t *iface, const void *vsel
 
 static int
 avro_generic_string_get(const avro_value_iface_t *iface,
-			const void *vself, const char **str, size_t *size)
+                        const void *vself, const char **str, size_t *size)
 {
 	AVRO_UNUSED(iface);
 	const avro_raw_string_t  *self = (const avro_raw_string_t *) vself;
@@ -1744,7 +1744,7 @@ avro_generic_string_get(const avro_value_iface_t *iface,
 
 static int
 avro_generic_string_grab(const avro_value_iface_t *iface,
-			 const void *vself, avro_wrapped_buffer_t *dest)
+                         const void *vself, avro_wrapped_buffer_t *dest)
 {
 	AVRO_UNUSED(iface);
 	const avro_raw_string_t  *self = (const avro_raw_string_t *) vself;
@@ -1759,7 +1759,7 @@ avro_generic_string_grab(const avro_value_iface_t *iface,
 
 static int
 avro_generic_string_set(const avro_value_iface_t *iface,
-			void *vself, const char *val)
+                        void *vself, const char *val)
 {
 	AVRO_UNUSED(iface);
 	check_param(EINVAL, val != NULL, "string contents");
@@ -1776,7 +1776,7 @@ avro_generic_string_set(const avro_value_iface_t *iface,
 
 static int
 avro_generic_string_set_length(const avro_value_iface_t *iface,
-			       void *vself, const char *val, size_t size)
+                               void *vself, const char *val, size_t size)
 {
 	AVRO_UNUSED(iface);
 	check_param(EINVAL, val != NULL, "string contents");
@@ -1787,7 +1787,7 @@ avro_generic_string_set_length(const avro_value_iface_t *iface,
 
 static int
 avro_generic_string_give_length(const avro_value_iface_t *iface,
-				void *vself, avro_wrapped_buffer_t *buf)
+                                void *vself, avro_wrapped_buffer_t *buf)
 {
 	AVRO_UNUSED(iface);
 	avro_raw_string_t  *self = (avro_raw_string_t *) vself;
@@ -1820,61 +1820,61 @@ avro_generic_string_done(const avro_value_iface_t *iface, void *vself)
 }
 
 static avro_generic_value_iface_t  AVRO_GENERIC_STRING_CLASS =
-{
-	{
-		/* "class" methods */
-		NULL, /* incref_iface */
-		NULL, /* decref_iface */
-		/* general "instance" methods */
-		avro_generic_value_incref,
-		avro_generic_value_decref,
-		avro_generic_string_reset,
-		avro_generic_string_get_type,
-		avro_generic_string_get_schema,
-		/* primitive getters */
-		NULL, /* get_boolean */
-		NULL, /* get_bytes */
-		NULL, /* grab_bytes */
-		NULL, /* get_double */
-		NULL, /* get_float */
-		NULL, /* get_int */
-		NULL, /* get_long */
-		NULL, /* get_null */
-		avro_generic_string_get,
-		avro_generic_string_grab,
-		NULL, /* get_enum */
-		NULL, /* get_fixed */
-		NULL, /* grab_fixed */
-		/* primitive setters */
-		NULL, /* set_boolean */
-		NULL, /* set_bytes */
-		NULL, /* give_bytes */
-		NULL, /* set_double */
-		NULL, /* set_float */
-		NULL, /* set_int */
-		NULL, /* set_long */
-		NULL, /* set_null */
-		avro_generic_string_set,
-		avro_generic_string_set_length,
-		avro_generic_string_give_length,
-		NULL, /* set_enum */
-		NULL, /* set_fixed */
-		NULL, /* give_fixed */
-		/* compound getters */
-		NULL, /* get_size */
-		NULL, /* get_by_index */
-		NULL, /* get_by_name */
-		NULL, /* get_discriminant */
-		NULL, /* get_current_branch */
-		/* compound setters */
-		NULL, /* append */
-		NULL, /* add */
-		NULL  /* set_branch */
-	},
-	avro_generic_string_instance_size,
-	avro_generic_string_init,
-	avro_generic_string_done
-};
+		{
+				{
+						/* "class" methods */
+						NULL, /* incref_iface */
+						NULL, /* decref_iface */
+						/* general "instance" methods */
+						avro_generic_value_incref,
+						avro_generic_value_decref,
+						avro_generic_string_reset,
+						avro_generic_string_get_type,
+						avro_generic_string_get_schema,
+						/* primitive getters */
+						NULL, /* get_boolean */
+						NULL, /* get_bytes */
+						NULL, /* grab_bytes */
+						NULL, /* get_double */
+						NULL, /* get_float */
+						NULL, /* get_int */
+						NULL, /* get_long */
+						NULL, /* get_null */
+						avro_generic_string_get,
+						avro_generic_string_grab,
+						NULL, /* get_enum */
+						NULL, /* get_fixed */
+						NULL, /* grab_fixed */
+						/* primitive setters */
+						NULL, /* set_boolean */
+						NULL, /* set_bytes */
+						NULL, /* give_bytes */
+						NULL, /* set_double */
+						NULL, /* set_float */
+						NULL, /* set_int */
+						NULL, /* set_long */
+						NULL, /* set_null */
+						avro_generic_string_set,
+						avro_generic_string_set_length,
+						avro_generic_string_give_length,
+						NULL, /* set_enum */
+						NULL, /* set_fixed */
+						NULL, /* give_fixed */
+						/* compound getters */
+						NULL, /* get_size */
+						NULL, /* get_by_index */
+						NULL, /* get_by_name */
+						NULL, /* get_discriminant */
+						NULL, /* get_current_branch */
+						/* compound setters */
+						NULL, /* append */
+						NULL, /* add */
+						NULL  /* set_branch */
+				},
+				avro_generic_string_instance_size,
+				avro_generic_string_init,
+				avro_generic_string_done
+		};
 
 avro_value_iface_t *
 avro_generic_string_class(void)
@@ -1924,7 +1924,7 @@ static avro_value_iface_t *
 avro_generic_array_incref_iface(avro_value_iface_t *viface)
 {
 	avro_generic_array_value_iface_t  *iface =
-	    container_of(viface, avro_generic_array_value_iface_t, parent);
+			container_of(viface, avro_generic_array_value_iface_t, parent);
 	avro_refcount_inc(&iface->refcount);
 	return viface;
 }
@@ -1933,7 +1933,7 @@ static void
 avro_generic_array_decref_iface(avro_value_iface_t *viface)
 {
 	avro_generic_array_value_iface_t  *iface =
-	    container_of(viface, avro_generic_array_value_iface_t, parent);
+			container_of(viface, avro_generic_array_value_iface_t, parent);
 	if (avro_refcount_dec(&iface->refcount)) {
 		avro_schema_decref(iface->schema);
 		avro_value_iface_decref(&iface->child_giface->parent);
@@ -1944,7 +1944,7 @@ avro_generic_array_decref_iface(avro_value_iface_t *viface)
 
 static void
 avro_generic_array_free_elements(const avro_generic_value_iface_t *child_giface,
-				 avro_generic_array_t *self)
+                                 avro_generic_array_t *self)
 {
 	size_t  i;
 	for (i = 0; i < avro_raw_array_size(&self->array); i++) {
@@ -1957,7 +1957,7 @@ static int
 avro_generic_array_reset(const avro_value_iface_t *viface, void *vself)
 {
 	const avro_generic_array_value_iface_t  *iface =
-	    container_of(viface, avro_generic_array_value_iface_t, parent);
+			container_of(viface, avro_generic_array_value_iface_t, parent);
 	avro_generic_array_t  *self = (avro_generic_array_t *) vself;
 	avro_generic_array_free_elements(iface->child_giface, self);
 	avro_raw_array_clear(&self->array);
@@ -1976,14 +1976,14 @@ static avro_schema_t
 avro_generic_array_get_schema(const avro_value_iface_t *viface, const void *vself)
 {
 	const avro_generic_array_value_iface_t  *iface =
-	    container_of(viface, avro_generic_array_value_iface_t, parent);
+			container_of(viface, avro_generic_array_value_iface_t, parent);
 	AVRO_UNUSED(vself);
 	return iface->schema;
 }
 
 static int
 avro_generic_array_get_size(const avro_value_iface_t *viface,
-			    const void *vself, size_t *size)
+                            const void *vself, size_t *size)
 {
 	AVRO_UNUSED(viface);
 	const avro_generic_array_t  *self = (const avro_generic_array_t *) vself;
@@ -1995,11 +1995,11 @@ avro_generic_array_get_size(const avro_value_iface_t *viface,
 
 static int
 avro_generic_array_get_by_index(const avro_value_iface_t *viface,
-				const void *vself, size_t index,
-				avro_value_t *child, const char **name)
+                                const void *vself, size_t index,
+                                avro_value_t *child, const char **name)
 {
 	const avro_generic_array_value_iface_t  *iface =
-	    container_of(viface, avro_generic_array_value_iface_t, parent);
+			container_of(viface, avro_generic_array_value_iface_t, parent);
 	AVRO_UNUSED(name);
 	const avro_generic_array_t  *self = (avro_generic_array_t *) vself;
 	if (index >= avro_raw_array_size(&self->array)) {
@@ -2013,12 +2013,12 @@ avro_generic_array_get_by_index(const avro_value_iface_t *viface,
 
 static int
 avro_generic_array_append(const avro_value_iface_t *viface,
-			  void *vself, avro_value_t *child,
-			  size_t *new_index)
+                          void *vself, avro_value_t *child,
+                          size_t *new_index)
 {
 	int  rval;
 	const avro_generic_array_value_iface_t  *iface =
-	    container_of(viface, avro_generic_array_value_iface_t, parent);
+			container_of(viface, avro_generic_array_value_iface_t, parent);
 	avro_generic_array_t  *self = (avro_generic_array_t *) vself;
 	child->iface = &iface->child_giface->parent;
 	child->self = avro_raw_array_append(&self->array);
@@ -2044,7 +2044,7 @@ static int
 avro_generic_array_init(const avro_value_iface_t *viface, void *vself)
 {
 	const avro_generic_array_value_iface_t  *iface =
-	    container_of(viface, avro_generic_array_value_iface_t, parent);
+			container_of(viface, avro_generic_array_value_iface_t, parent);
 	avro_generic_array_t  *self = (avro_generic_array_t *) vself;
 
 	size_t  child_size = avro_value_instance_size(iface->child_giface);
@@ -2056,75 +2056,75 @@ static void
 avro_generic_array_done(const avro_value_iface_t *viface, void *vself)
 {
 	const avro_generic_array_value_iface_t  *iface =
-	    container_of(viface, avro_generic_array_value_iface_t, parent);
+			container_of(viface, avro_generic_array_value_iface_t, parent);
 	avro_generic_array_t  *self = (avro_generic_array_t *) vself;
 	avro_generic_array_free_elements(iface->child_giface, self);
 	avro_raw_array_done(&self->array);
 }
 
 static avro_generic_value_iface_t  AVRO_GENERIC_ARRAY_CLASS =
-{
-{
-	/* "class" methods */
-	avro_generic_array_incref_iface,
-	avro_generic_array_decref_iface,
-	/* general "instance" methods */
-	avro_generic_value_incref,
-	avro_generic_value_decref,
-	avro_generic_array_reset,
-	avro_generic_array_get_type,
-	avro_generic_array_get_schema,
-	/* primitive getters */
-	NULL, /* get_boolean */
-	NULL, /* get_bytes */
-	NULL, /* grab_bytes */
-	NULL, /* get_double */
-	NULL, /* get_float */
-	NULL, /* get_int */
-	NULL, /* get_long */
-	NULL, /* get_null */
-	NULL, /* get_string */
-	NULL, /* grab_string */
-	NULL, /* get_enum */
-	NULL, /* get_fixed */
-	NULL, /* grab_fixed */
-	/* primitive setters */
-	NULL, /* set_boolean */
-	NULL, /* set_bytes */
-	NULL, /* give_bytes */
-	NULL, /* set_double */
-	NULL, /* set_float */
-	NULL, /* set_int */
-	NULL, /* set_long */
-	NULL, /* set_null */
-	NULL, /* set_string */
-	NULL, /* set_string_length */
-	NULL, /* give_string_length */
-	NULL, /* set_enum */
-	NULL, /* set_fixed */
-	NULL, /* give_fixed */
-	/* compound getters */
-	avro_generic_array_get_size,
-	avro_generic_array_get_by_index,
-	NULL, /* get_by_name */
-	NULL, /* get_discriminant */
-	NULL, /* get_current_branch */
-	/* compound setters */
-	avro_generic_array_append,
-	NULL, /* add */
-	NULL  /* set_branch */
-},
-	avro_generic_array_instance_size,
-	avro_generic_array_init,
-	avro_generic_array_done
-};
+		{
+				{
+						/* "class" methods */
+						avro_generic_array_incref_iface,
+						avro_generic_array_decref_iface,
+						/* general "instance" methods */
+						avro_generic_value_incref,
+						avro_generic_value_decref,
+						avro_generic_array_reset,
+						avro_generic_array_get_type,
+						avro_generic_array_get_schema,
+						/* primitive getters */
+						NULL, /* get_boolean */
+						NULL, /* get_bytes */
+						NULL, /* grab_bytes */
+						NULL, /* get_double */
+						NULL, /* get_float */
+						NULL, /* get_int */
+						NULL, /* get_long */
+						NULL, /* get_null */
+						NULL, /* get_string */
+						NULL, /* grab_string */
+						NULL, /* get_enum */
+						NULL, /* get_fixed */
+						NULL, /* grab_fixed */
+						/* primitive setters */
+						NULL, /* set_boolean */
+						NULL, /* set_bytes */
+						NULL, /* give_bytes */
+						NULL, /* set_double */
+						NULL, /* set_float */
+						NULL, /* set_int */
+						NULL, /* set_long */
+						NULL, /* set_null */
+						NULL, /* set_string */
+						NULL, /* set_string_length */
+						NULL, /* give_string_length */
+						NULL, /* set_enum */
+						NULL, /* set_fixed */
+						NULL, /* give_fixed */
+						/* compound getters */
+						avro_generic_array_get_size,
+						avro_generic_array_get_by_index,
+						NULL, /* get_by_name */
+						NULL, /* get_discriminant */
+						NULL, /* get_current_branch */
+						/* compound setters */
+						avro_generic_array_append,
+						NULL, /* add */
+						NULL  /* set_branch */
+				},
+				avro_generic_array_instance_size,
+				avro_generic_array_init,
+				avro_generic_array_done
+		};
 
 static avro_generic_value_iface_t *
 avro_generic_array_class(avro_schema_t schema, memoize_state_t *state)
 {
 	avro_schema_t  child_schema = avro_schema_array_items(schema);
 	avro_generic_value_iface_t  *child_giface =
-	    avro_generic_class_from_schema_memoized(child_schema, state);
+			avro_generic_class_from_schema_memoized(child_schema, state);
 	if (child_giface == NULL) {
 		return NULL;
 	}
@@ -2137,7 +2137,7 @@ avro_generic_array_class(avro_schema_t schema, memoize_state_t *state)
 	}
 
 	avro_generic_array_value_iface_t  *iface =
-		(avro_generic_array_value_iface_t *) avro_new(avro_generic_array_value_iface_t);
+			(avro_generic_array_value_iface_t *) avro_new(avro_generic_array_value_iface_t);
 	if (iface == NULL) {
 		avro_value_iface_decref(&child_giface->parent);
 		return NULL;
@@ -2171,7 +2171,7 @@ static avro_value_iface_t *
 avro_generic_enum_incref_iface(avro_value_iface_t *viface)
 {
 	avro_generic_enum_value_iface_t  *iface =
-	    (avro_generic_enum_value_iface_t *) viface;
+			(avro_generic_enum_value_iface_t *) viface;
 	avro_refcount_inc(&iface->refcount);
 	return viface;
 }
@@ -2180,7 +2180,7 @@ static void
 avro_generic_enum_decref_iface(avro_value_iface_t *viface)
 {
 	avro_generic_enum_value_iface_t  *iface =
-	    (avro_generic_enum_value_iface_t *) viface;
+			(avro_generic_enum_value_iface_t *) viface;
 	if (avro_refcount_dec(&iface->refcount)) {
 		avro_schema_decref(iface->schema);
 		avro_freet(avro_generic_enum_value_iface_t, iface);
@@ -2208,14 +2208,14 @@ static avro_schema_t
 avro_generic_enum_get_schema(const avro_value_iface_t *viface, const void *vself)
 {
 	const avro_generic_enum_value_iface_t  *iface =
-	    container_of(viface, avro_generic_enum_value_iface_t, parent);
+			container_of(viface, avro_generic_enum_value_iface_t, parent);
 	AVRO_UNUSED(vself);
 	return iface->schema;
 }
 
 static int
 avro_generic_enum_get(const avro_value_iface_t *viface,
-		      const void *vself, int *out)
+                      const void *vself, int *out)
 {
 	AVRO_UNUSED(viface);
 	const int  *self = (const int *) vself;
@@ -2225,7 +2225,7 @@ avro_generic_enum_get(const avro_value_iface_t *viface,
 
 static int
 avro_generic_enum_set(const avro_value_iface_t *viface,
-		      void *vself, int val)
+                      void *vself, int val)
 {
 	AVRO_UNUSED(viface);
 	int  *self = (int *) vself;
@@ -2257,67 +2257,67 @@ avro_generic_enum_done(const avro_value_iface_t *viface, void *vself)
 }
 
 static avro_generic_value_iface_t  AVRO_GENERIC_ENUM_CLASS =
-{
-	{
-		/* "class" methods */
-		avro_generic_enum_incref_iface,
-		avro_generic_enum_decref_iface,
-		/* general "instance" methods */
-		avro_generic_value_incref,
-		avro_generic_value_decref,
-		avro_generic_enum_reset,
-		avro_generic_enum_get_type,
-		avro_generic_enum_get_schema,
-		/* primitive getters */
-		NULL, /* get_boolean */
-		NULL, /* get_bytes */
-		NULL, /* grab_bytes */
-		NULL, /* get_double */
-		NULL, /* get_float */
-		NULL, /* get_int */
-		NULL, /* get_long */
-		NULL, /* get_null */
-		NULL, /* get_string */
-		NULL, /* grab_string */
-		avro_generic_enum_get,
-		NULL, /* get_fixed */
-		NULL, /* grab_fixed */
-		/* primitive setters */
-		NULL, /* set_boolean */
-		NULL, /* set_bytes */
-		NULL, /* give_bytes */
-		NULL, /* set_double */
-		NULL, /* set_float */
-		NULL, /* set_int */
-		NULL, /* set_long */
-		NULL, /* set_null */
-		NULL, /* set_string */
-		NULL, /* set_string_length */
-		NULL, /* give_string_length */
-		avro_generic_enum_set,
-		NULL, /* set_fixed */
-		NULL, /* give_fixed */
-		/* compound getters */
-		NULL, /* get_size */
-		NULL, /* get_by_index */
-		NULL, /* get_by_name */
-		NULL, /* get_discriminant */
-		NULL, /* get_current_branch */
-		/* compound setters */
-		NULL, /* append */
-		NULL, /* add */
-		NULL  /* set_branch */
-	},
-	avro_generic_enum_instance_size,
-	avro_generic_enum_init,
-	avro_generic_enum_done
-};
+		{
+				{
+						/* "class" methods */
+						avro_generic_enum_incref_iface,
+						avro_generic_enum_decref_iface,
+						/* general "instance" methods */
+						avro_generic_value_incref,
+						avro_generic_value_decref,
+						avro_generic_enum_reset,
+						avro_generic_enum_get_type,
+						avro_generic_enum_get_schema,
+						/* primitive getters */
+						NULL, /* get_boolean */
+						NULL, /* get_bytes */
+						NULL, /* grab_bytes */
+						NULL, /* get_double */
+						NULL, /* get_float */
+						NULL, /* get_int */
+						NULL, /* get_long */
+						NULL, /* get_null */
+						NULL, /* get_string */
+						NULL, /* grab_string */
+						avro_generic_enum_get,
+						NULL, /* get_fixed */
+						NULL, /* grab_fixed */
+						/* primitive setters */
+						NULL, /* set_boolean */
+						NULL, /* set_bytes */
+						NULL, /* give_bytes */
+						NULL, /* set_double */
+						NULL, /* set_float */
+						NULL, /* set_int */
+						NULL, /* set_long */
+						NULL, /* set_null */
+						NULL, /* set_string */
+						NULL, /* set_string_length */
+						NULL, /* give_string_length */
+						avro_generic_enum_set,
+						NULL, /* set_fixed */
+						NULL, /* give_fixed */
+						/* compound getters */
+						NULL, /* get_size */
+						NULL, /* get_by_index */
+						NULL, /* get_by_name */
+						NULL, /* get_discriminant */
+						NULL, /* get_current_branch */
+						/* compound setters */
+						NULL, /* append */
+						NULL, /* add */
+						NULL  /* set_branch */
+				},
+				avro_generic_enum_instance_size,
+				avro_generic_enum_init,
+				avro_generic_enum_done
+		};
 
 static avro_generic_value_iface_t *
 avro_generic_enum_class(avro_schema_t schema)
 {
 	avro_generic_enum_value_iface_t  *iface =
-		(avro_generic_enum_value_iface_t *) avro_new(avro_generic_enum_value_iface_t);
+			(avro_generic_enum_value_iface_t *) avro_new(avro_generic_enum_value_iface_t);
 	if (iface == NULL) {
 		return NULL;
 	}
@@ -2345,7 +2345,7 @@ static avro_value_iface_t *
 avro_generic_fixed_incref_iface(avro_value_iface_t *viface)
 {
 	avro_generic_fixed_value_iface_t  *iface =
-	    container_of(viface, avro_generic_fixed_value_iface_t, parent);
+			container_of(viface, avro_generic_fixed_value_iface_t, parent);
 	avro_refcount_inc(&iface->refcount);
 	return viface;
 }
@@ -2354,7 +2354,7 @@ static void
 avro_generic_fixed_decref_iface(avro_value_iface_t *viface)
 {
 	avro_generic_fixed_value_iface_t  *iface =
-	    container_of(viface, avro_generic_fixed_value_iface_t, parent);
+			container_of(viface, avro_generic_fixed_value_iface_t, parent);
 	if (avro_refcount_dec(&iface->refcount)) {
 		avro_schema_decref(iface->schema);
 		avro_freet(avro_generic_fixed_value_iface_t, iface);
@@ -2365,7 +2365,7 @@ static int
 avro_generic_fixed_reset(const avro_value_iface_t *viface, void *vself)
 {
 	const avro_generic_fixed_value_iface_t  *iface =
-	    container_of(viface, avro_generic_fixed_value_iface_t, parent);
+			container_of(viface, avro_generic_fixed_value_iface_t, parent);
 	memset(vself, 0, iface->data_size);
 	return 0;
 }
@@ -2382,17 +2382,17 @@ static avro_schema_t
 avro_generic_fixed_get_schema(const avro_value_iface_t *viface, const void *vself)
 {
 	const avro_generic_fixed_value_iface_t  *iface =
-	    container_of(viface, avro_generic_fixed_value_iface_t, parent);
+			container_of(viface, avro_generic_fixed_value_iface_t, parent);
 	AVRO_UNUSED(vself);
 	return iface->schema;
 }
 
 static int
 avro_generic_fixed_get(const avro_value_iface_t *viface,
-		       const void *vself, const void **buf, size_t *size)
+                       const void *vself, const void **buf, size_t *size)
 {
 	const avro_generic_fixed_value_iface_t  *iface =
-	    container_of(viface, avro_generic_fixed_value_iface_t, parent);
+			container_of(viface, avro_generic_fixed_value_iface_t, parent);
 	if (buf != NULL) {
 		*buf = vself;
 	}
@@ -2404,20 +2404,20 @@ avro_generic_fixed_get(const avro_value_iface_t *viface,
 
 static int
 avro_generic_fixed_grab(const avro_value_iface_t *viface,
-			const void *vself, avro_wrapped_buffer_t *dest)
+                        const void *vself, avro_wrapped_buffer_t *dest)
 {
 	const avro_generic_fixed_value_iface_t  *iface =
-	    container_of(viface, avro_generic_fixed_value_iface_t, parent);
+			container_of(viface, avro_generic_fixed_value_iface_t, parent);
 	return avro_wrapped_buffer_new(dest, vself, iface->data_size);
 }
 
 static int
 avro_generic_fixed_set(const avro_value_iface_t *viface,
-		       void *vself, void *buf, size_t size)
+                       void *vself, void *buf, size_t size)
 {
 	check_param(EINVAL, buf != NULL, "fixed contents");
 	const avro_generic_fixed_value_iface_t  *iface =
-	    container_of(viface, avro_generic_fixed_value_iface_t, parent);
+			container_of(viface, avro_generic_fixed_value_iface_t, parent);
 	if (size != iface->data_size) {
 		avro_set_error("Invalid data size in set_fixed");
 		return EINVAL;
@@ -2428,10 +2428,10 @@ avro_generic_fixed_set(const avro_value_iface_t *viface,
 
 static int
 avro_generic_fixed_give(const avro_value_iface_t *viface,
-			void *vself, avro_wrapped_buffer_t *buf)
+                        void *vself, avro_wrapped_buffer_t *buf)
 {
 	int  rval = avro_generic_fixed_set
-	    (viface, vself, (void *) buf->buf, buf->size);
+			(viface, vself, (void *) buf->buf, buf->size);
 	avro_wrapped_buffer_free(buf);
 	return rval;
 }
@@ -2440,7 +2440,7 @@ static size_t
 avro_generic_fixed_instance_size(const avro_value_iface_t *viface)
 {
 	const avro_generic_fixed_value_iface_t  *iface =
-	    container_of(viface, avro_generic_fixed_value_iface_t, parent);
+			container_of(viface, avro_generic_fixed_value_iface_t, parent);
 	return iface->data_size;
 }
 
@@ -2448,7 +2448,7 @@ static int
 avro_generic_fixed_init(const avro_value_iface_t *viface, void *vself)
 {
 	const avro_generic_fixed_value_iface_t  *iface =
-	    container_of(viface, avro_generic_fixed_value_iface_t, parent);
+			container_of(viface, avro_generic_fixed_value_iface_t, parent);
 	memset(vself, 0, iface->data_size);
 	return 0;
 }
@@ -2461,67 +2461,67 @@ avro_generic_fixed_done(const avro_value_iface_t *viface, void *vself)
 }
 
 static avro_generic_value_iface_t  AVRO_GENERIC_FIXED_CLASS =
-{
-	{
-		/* "class" methods */
-		avro_generic_fixed_incref_iface,
-		avro_generic_fixed_decref_iface,
-		/* general "instance" methods */
-		avro_generic_value_incref,
-		avro_generic_value_decref,
-		avro_generic_fixed_reset,
-		avro_generic_fixed_get_type,
-		avro_generic_fixed_get_schema,
-		/* primitive getters */
-		NULL, /* get_boolean */
-		NULL, /* get_bytes */
-		NULL, /* grab_bytes */
-		NULL, /* get_double */
-		NULL, /* get_float */
-		NULL, /* get_int */
-		NULL, /* get_long */
-		NULL, /* get_null */
-		NULL, /* get_string */
-		NULL, /* grab_string */
-		NULL, /* get_enum */
-		avro_generic_fixed_get,
-		avro_generic_fixed_grab,
-		/* primitive setters */
-		NULL, /* set_boolean */
-		NULL, /* set_bytes */
-		NULL, /* give_bytes */
-		NULL, /* set_double */
-		NULL, /* set_float */
-		NULL, /* set_int */
-		NULL, /* set_long */
-		NULL, /* set_null */
-		NULL, /* set_string */
-		NULL, /* set_string_length */
-		NULL, /* give_string_length */
-		NULL, /* set_enum */
-		avro_generic_fixed_set,
-		avro_generic_fixed_give,
-		/* compound getters */
-		NULL, /* get_size */
-		NULL, /* get_by_index */
-		NULL, /* get_by_name */
-		NULL, /* get_discriminant */
-		NULL, /* get_current_branch */
-		/* compound setters */
-		NULL, /* append */
-		NULL, /* add */
-		NULL  /* set_branch */
-	},
-	avro_generic_fixed_instance_size,
-	avro_generic_fixed_init,
-	avro_generic_fixed_done
-};
+		{
+				{
+						/* "class" methods */
+						avro_generic_fixed_incref_iface,
+						avro_generic_fixed_decref_iface,
+						/* general "instance" methods */
+						avro_generic_value_incref,
+						avro_generic_value_decref,
+						avro_generic_fixed_reset,
+						avro_generic_fixed_get_type,
+						avro_generic_fixed_get_schema,
+						/* primitive getters */
+						NULL, /* get_boolean */
+						NULL, /* get_bytes */
+						NULL, /* grab_bytes */
+						NULL, /* get_double */
+						NULL, /* get_float */
+						NULL, /* get_int */
+						NULL, /* get_long */
+						NULL, /* get_null */
+						NULL, /* get_string */
+						NULL, /* grab_string */
+						NULL, /* get_enum */
+						avro_generic_fixed_get,
+						avro_generic_fixed_grab,
+						/* primitive setters */
+						NULL, /* set_boolean */
+						NULL, /* set_bytes */
+						NULL, /* give_bytes */
+						NULL, /* set_double */
+						NULL, /* set_float */
+						NULL, /* set_int */
+						NULL, /* set_long */
+						NULL, /* set_null */
+						NULL, /* set_string */
+						NULL, /* set_string_length */
+						NULL, /* give_string_length */
+						NULL, /* set_enum */
+						avro_generic_fixed_set,
+						avro_generic_fixed_give,
+						/* compound getters */
+						NULL, /* get_size */
+						NULL, /* get_by_index */
+						NULL, /* get_by_name */
+						NULL, /* get_discriminant */
+						NULL, /* get_current_branch */
+						/* compound setters */
+						NULL, /* append */
+						NULL, /* add */
+						NULL  /* set_branch */
+				},
+				avro_generic_fixed_instance_size,
+				avro_generic_fixed_init,
+				avro_generic_fixed_done
+		};
 
 static avro_generic_value_iface_t *
 avro_generic_fixed_class(avro_schema_t schema)
 {
 	avro_generic_fixed_value_iface_t  *iface =
-		(avro_generic_fixed_value_iface_t *) avro_new(avro_generic_fixed_value_iface_t);
+			(avro_generic_fixed_value_iface_t *) avro_new(avro_generic_fixed_value_iface_t);
 	if (iface == NULL) {
 		return NULL;
 	}
@@ -2559,7 +2559,7 @@ static avro_value_iface_t *
 avro_generic_map_incref_iface(avro_value_iface_t *viface)
 {
 	avro_generic_map_value_iface_t  *iface =
-	    container_of(viface, avro_generic_map_value_iface_t, parent);
+			container_of(viface, avro_generic_map_value_iface_t, parent);
 	avro_refcount_inc(&iface->refcount);
 	return viface;
 }
@@ -2568,7 +2568,7 @@ static void
 avro_generic_map_decref_iface(avro_value_iface_t *viface)
 {
 	avro_generic_map_value_iface_t  *iface =
-	    container_of(viface, avro_generic_map_value_iface_t, parent);
+			container_of(viface, avro_generic_map_value_iface_t, parent);
 	if (avro_refcount_dec(&iface->refcount)) {
 		avro_schema_decref(iface->schema);
 		avro_value_iface_decref(&iface->child_giface->parent);
@@ -2579,7 +2579,7 @@ avro_generic_map_decref_iface(avro_value_iface_t *viface)
 
 static void
 avro_generic_map_free_elements(const avro_generic_value_iface_t *child_giface,
-			       avro_generic_map_t *self)
+                               avro_generic_map_t *self)
 {
 	size_t  i;
 	for (i = 0; i < avro_raw_map_size(&self->map); i++) {
@@ -2592,7 +2592,7 @@ static int
 avro_generic_map_reset(const avro_value_iface_t *viface, void *vself)
 {
 	const avro_generic_map_value_iface_t  *iface =
-	    container_of(viface, avro_generic_map_value_iface_t, parent);
+			container_of(viface, avro_generic_map_value_iface_t, parent);
 	avro_generic_map_t  *self = (avro_generic_map_t *) vself;
 	avro_generic_map_free_elements(iface->child_giface, self);
 	avro_raw_map_clear(&self->map);
@@ -2611,14 +2611,14 @@ static avro_schema_t
 avro_generic_map_get_schema(const avro_value_iface_t *viface, const void *vself)
 {
 	const avro_generic_map_value_iface_t  *iface =
-	    container_of(viface, avro_generic_map_value_iface_t, parent);
+			container_of(viface, avro_generic_map_value_iface_t, parent);
 	AVRO_UNUSED(vself);
 	return iface->schema;
 }
 
 static int
 avro_generic_map_get_size(const avro_value_iface_t *viface,
-			  const void *vself, size_t *size)
+                          const void *vself, size_t *size)
 {
 	AVRO_UNUSED(viface);
 	const avro_generic_map_t  *self = (const avro_generic_map_t *) vself;
@@ -2630,11 +2630,11 @@ avro_generic_map_get_size(const avro_value_iface_t *viface,
 
 static int
 avro_generic_map_get_by_index(const avro_value_iface_t *viface,
-			      const void *vself, size_t index,
-			      avro_value_t *child, const char **name)
+                              const void *vself, size_t index,
+                              avro_value_t *child, const char **name)
 {
 	const avro_generic_map_value_iface_t  *iface =
-	    container_of(viface, avro_generic_map_value_iface_t, parent);
+			container_of(viface, avro_generic_map_value_iface_t, parent);
 	const avro_generic_map_t  *self = (const avro_generic_map_t *) vself;
 	if (index >= avro_raw_map_size(&self->map)) {
 		avro_set_error("Map index %" PRIsz " out of range", index);
@@ -2650,11 +2650,11 @@ avro_generic_map_get_by_index(const avro_value_iface_t *viface,
 
 static int
 avro_generic_map_get_by_name(const avro_value_iface_t *viface,
-			     const void *vself, const char *name,
-			     avro_value_t *child, size_t *index)
+                             const void *vself, const char *name,
+                             avro_value_t *child, size_t *index)
 {
 	const avro_generic_map_value_iface_t  *iface =
-	    container_of(viface, avro_generic_map_value_iface_t, parent);
+			container_of(viface, avro_generic_map_value_iface_t, parent);
 	const avro_generic_map_t  *self = (const avro_generic_map_t *) vself;
 	child->iface = &iface->child_giface->parent;
 	child->self = avro_raw_map_get(&self->map, name, index);
@@ -2667,16 +2667,16 @@ avro_generic_map_get_by_name(const avro_value_iface_t *viface,
 
 static int
 avro_generic_map_add(const avro_value_iface_t *viface,
-		     void *vself, const char *key,
-		     avro_value_t *child, size_t *index, int *is_new)
+                     void *vself, const char *key,
+                     avro_value_t *child, size_t *index, int *is_new)
 {
 	const avro_generic_map_value_iface_t  *iface =
-	    container_of(viface, avro_generic_map_value_iface_t, parent);
+			container_of(viface, avro_generic_map_value_iface_t, parent);
 	int  rval;
 	avro_generic_map_t  *self = (avro_generic_map_t *) vself;
 	child->iface = &iface->child_giface->parent;
 	rval = avro_raw_map_get_or_create(&self->map, key,
-					  &child->self, index);
+	                                  &child->self, index);
 	if (rval < 0) {
 		return -rval;
 	}
@@ -2700,7 +2700,7 @@ static int
 avro_generic_map_init(const avro_value_iface_t *viface, void *vself)
 {
 	const avro_generic_map_value_iface_t  *iface =
-	    container_of(viface, avro_generic_map_value_iface_t, parent);
+			container_of(viface, avro_generic_map_value_iface_t, parent);
 	avro_generic_map_t  *self = (avro_generic_map_t *) vself;
 
 	size_t  child_size = avro_value_instance_size(iface->child_giface);
@@ -2712,75 +2712,77 @@ static void
 avro_generic_map_done(const avro_value_iface_t *viface, void *vself)
 {
 	const avro_generic_map_value_iface_t  *iface =
-	    container_of(viface, avro_generic_map_value_iface_t, parent);
+			container_of(viface, avro_generic_map_value_iface_t, parent);
 	avro_generic_map_t  *self = (avro_generic_map_t *) vself;
 	avro_generic_map_free_elements(iface->child_giface, self);
 	avro_raw_map_done(&self->map);
 }
 
 static avro_generic_value_iface_t  AVRO_GENERIC_MAP_CLASS =
-{
-	{
-		/* "class" methods */
-		avro_generic_map_incref_iface,
-		avro_generic_map_decref_iface,
-		/* general "instance" methods */
-		avro_generic_value_incref,
-		avro_generic_value_decref,
-		avro_generic_map_reset,
-		avro_generic_map_get_type,
-		avro_generic_map_get_schema,
-		/* primitive getters */
-		NULL, /* get_boolean */
-		NULL, /* get_bytes */
-		NULL, /* grab_bytes */
-		NULL, /* get_double */
-		NULL, /* get_float */
-		NULL, /* get_int */
-		NULL, /* get_long */
-		NULL, /* get_null */
-		NULL, /* get_string */
-		NULL, /* grab_string */
-		NULL, /* get_enum */
-		NULL, /* get_fixed */
-		NULL, /* grab_fixed */
-		/* primitive setters */
-		NULL, /* set_boolean */
-		NULL, /* set_bytes */
-		NULL, /* give_bytes */
-		NULL, /* set_double */
-		NULL, /* set_float */
-		NULL, /* set_int */
-		NULL, /* set_long */
-		NULL, /* set_null */
-		NULL, /* set_string */
-		NULL, /* set_string_length */
-		NULL, /* give_string_length */
-		NULL, /* set_enum */
-		NULL, /* set_fixed */
-		NULL, /* give_fixed */
-		/* compound getters */
-		avro_generic_map_get_size,
-		avro_generic_map_get_by_index,
-		avro_generic_map_get_by_name,
-		NULL, /* get_discriminant */
-		NULL, /* get_current_branch */
-		/* compound setters */
-		NULL, /* append */
-		avro_generic_map_add,
-		NULL  /* set_branch */
-	},
-	avro_generic_map_instance_size,
-	avro_generic_map_init,
-	avro_generic_map_done
-};
+		{
+				{
+						/* "class" methods */
+						avro_generic_map_incref_iface,
+						avro_generic_map_decref_iface,
+						/* general "instance" methods */
+						avro_generic_value_incref,
+						avro_generic_value_decref,
+						avro_generic_map_reset,
+						avro_generic_map_get_type,
+						avro_generic_map_get_schema,
+						/* primitive getters */
+						NULL, /* get_boolean */
+						NULL, /* get_bytes */
+						NULL, /* grab_bytes */
+						NULL, /* get_double */
+						NULL, /* get_float */
+						NULL, /* get_int */
+						NULL, /* get_long */
+						NULL, /* get_null */
+						NULL, /* get_string */
+						NULL, /* grab_string */
+						NULL, /* get_enum */
+						NULL, /* get_fixed */
+						NULL, /* grab_fixed */
+						/* primitive setters */
+						NULL, /* set_boolean */
+						NULL, /* set_bytes */
+						NULL, /* give_bytes */
+						NULL, /* set_double */
+						NULL, /* set_float */
+						NULL, /* set_int */
+						NULL, /* set_long */
+						NULL, /* set_null */
+						NULL, /* set_string */
+						NULL, /* set_string_length */
+						NULL, /* give_string_length */
+						NULL, /* set_enum */
+						NULL, /* set_fixed */
+						NULL, /* give_fixed */
+						/* compound getters */
+						avro_generic_map_get_size,
+						avro_generic_map_get_by_index,
+						avro_generic_map_get_by_name,
+						NULL, /* get_discriminant */
+						NULL, /* get_current_branch */
+						/* compound setters */
+						NULL, /* append */
+						avro_generic_map_add,
+						NULL,  /* set_branch */
+						NULL, /*get_chunk*/
+
+				},
+				avro_generic_map_instance_size,
+				avro_generic_map_init,
+				avro_generic_map_done
+		};
 
 static avro_generic_value_iface_t *
 avro_generic_map_class(avro_schema_t schema, memoize_state_t *state)
 {
 	avro_schema_t  child_schema = avro_schema_array_items(schema);
 	avro_generic_value_iface_t  *child_giface =
-	    avro_generic_class_from_schema_memoized(child_schema, state);
+			avro_generic_class_from_schema_memoized(child_schema, state);
 	if (child_giface == NULL) {
 		return NULL;
 	}
@@ -2793,7 +2795,7 @@ avro_generic_map_class(avro_schema_t schema, memoize_state_t *state)
 	}
 
 	avro_generic_map_value_iface_t  *iface =
-		(avro_generic_map_value_iface_t *) avro_new(avro_generic_map_value_iface_t);
+			(avro_generic_map_value_iface_t *) avro_new(avro_generic_map_value_iface_t);
 	if (iface == NULL) {
 		avro_value_iface_decref(&child_giface->parent);
 		return NULL;
@@ -2865,7 +2867,7 @@ static avro_value_iface_t *
 avro_generic_record_incref_iface(avro_value_iface_t *viface)
 {
 	avro_generic_record_value_iface_t  *iface =
-	    container_of(viface, avro_generic_record_value_iface_t, parent);
+			container_of(viface, avro_generic_record_value_iface_t, parent);
 	avro_refcount_inc(&iface->refcount);
 	return viface;
 }
@@ -2874,7 +2876,7 @@ static void
 avro_generic_record_decref_iface(avro_value_iface_t *viface)
 {
 	avro_generic_record_value_iface_t  *iface =
-	    container_of(viface, avro_generic_record_value_iface_t, parent);
+			container_of(viface, avro_generic_record_value_iface_t, parent);
 
 	if (avro_refcount_dec(&iface->refcount)) {
 		size_t  i;
@@ -2884,9 +2886,9 @@ avro_generic_record_decref_iface(avro_value_iface_t *viface)
 
 		avro_schema_decref(iface->schema);
 		avro_free(iface->field_offsets,
-			  sizeof(size_t) * iface->field_count);
+		          sizeof(size_t) * iface->field_count);
 		avro_free(iface->field_ifaces,
-			  sizeof(avro_generic_value_iface_t *) * iface->field_count);
+		          sizeof(avro_generic_value_iface_t *) * iface->field_count);
 
 		avro_freet(avro_generic_record_value_iface_t, iface);
 	}
@@ -2897,14 +2899,14 @@ static int
 avro_generic_record_reset(const avro_value_iface_t *viface, void *vself)
 {
 	const avro_generic_record_value_iface_t  *iface =
-	    container_of(viface, avro_generic_record_value_iface_t, parent);
+			container_of(viface, avro_generic_record_value_iface_t, parent);
 	int  rval;
 	avro_generic_record_t  *self = (avro_generic_record_t *) vself;
 	size_t  i;
 	for (i = 0; i < iface->field_count; i++) {
 		avro_value_t  value = {
-			&iface->field_ifaces[i]->parent,
-			avro_generic_record_field(iface, self, i)
+				&iface->field_ifaces[i]->parent,
+				avro_generic_record_field(iface, self, i)
 		};
 		check(rval, avro_value_reset(&value));
 	}
@@ -2923,17 +2925,17 @@ static avro_schema_t
 avro_generic_record_get_schema(const avro_value_iface_t *viface, const void *vself)
 {
 	const avro_generic_record_value_iface_t  *iface =
-	    container_of(viface, avro_generic_record_value_iface_t, parent);
+			container_of(viface, avro_generic_record_value_iface_t, parent);
 	AVRO_UNUSED(vself);
 	return iface->schema;
 }
 
 static int
 avro_generic_record_get_size(const avro_value_iface_t *viface,
-			     const void *vself, size_t *size)
+                             const void *vself, size_t *size)
 {
 	const avro_generic_record_value_iface_t  *iface =
-	    container_of(viface, avro_generic_record_value_iface_t, parent);
+			container_of(viface, avro_generic_record_value_iface_t, parent);
 	AVRO_UNUSED(vself);
 	if (size != NULL) {
 		*size = iface->field_count;
@@ -2943,11 +2945,11 @@ avro_generic_record_get_size(const avro_value_iface_t *viface,
 
 static int
 avro_generic_record_get_by_index(const avro_value_iface_t *viface,
-				 const void *vself, size_t index,
-				 avro_value_t *child, const char **name)
+                                 const void *vself, size_t index,
+                                 avro_value_t *child, const char **name)
 {
 	const avro_generic_record_value_iface_t  *iface =
-	    container_of(viface, avro_generic_record_value_iface_t, parent);
+			container_of(viface, avro_generic_record_value_iface_t, parent);
 	const avro_generic_record_t  *self = (const avro_generic_record_t *) vself;
 	if (index >= iface->field_count) {
 		avro_set_error("Field index %" PRIsz " out of range", index);
@@ -2969,11 +2971,11 @@ avro_generic_record_get_by_index(const avro_value_iface_t *viface,
 
 static int
 avro_generic_record_get_by_name(const avro_value_iface_t *viface,
-				const void *vself, const char *name,
-				avro_value_t *child, size_t *index_out)
+                                const void *vself, const char *name,
+                                avro_value_t *child, size_t *index_out)
 {
 	const avro_generic_record_value_iface_t  *iface =
-	    container_of(viface, avro_generic_record_value_iface_t, parent);
+			container_of(viface, avro_generic_record_value_iface_t, parent);
 	const avro_generic_record_t  *self = (const avro_generic_record_t *) vself;
 
 	avro_schema_t  schema = iface->schema;
@@ -2995,7 +2997,7 @@ static size_t
 avro_generic_record_instance_size(const avro_value_iface_t *viface)
 {
 	const avro_generic_record_value_iface_t  *iface =
-	    container_of(viface, avro_generic_record_value_iface_t, parent);
+			container_of(viface, avro_generic_record_value_iface_t, parent);
 	return iface->instance_size;
 }
 
@@ -3004,15 +3006,15 @@ avro_generic_record_init(const avro_value_iface_t *viface, void *vself)
 {
 	int  rval;
 	const avro_generic_record_value_iface_t  *iface =
-	    container_of(viface, avro_generic_record_value_iface_t, parent);
+			container_of(viface, avro_generic_record_value_iface_t, parent);
 	avro_generic_record_t  *self = (avro_generic_record_t *) vself;
 
 	/* Initialize each field */
 	size_t  i;
 	for (i = 0; i < iface->field_count; i++) {
 		check(rval, avro_value_init
-		      (iface->field_ifaces[i],
-		       avro_generic_record_field(iface, self, i)));
+				(iface->field_ifaces[i],
+				 avro_generic_record_field(iface, self, i)));
 	}
 
 	return 0;
@@ -3022,77 +3024,77 @@ static void
 avro_generic_record_done(const avro_value_iface_t *viface, void *vself)
 {
 	const avro_generic_record_value_iface_t  *iface =
-	    container_of(viface, avro_generic_record_value_iface_t, parent);
+			container_of(viface, avro_generic_record_value_iface_t, parent);
 	avro_generic_record_t  *self = (avro_generic_record_t *) vself;
 	size_t  i;
 	for (i = 0; i < iface->field_count; i++) {
 		avro_value_done(iface->field_ifaces[i],
-				avro_generic_record_field(iface, self, i));
+		                avro_generic_record_field(iface, self, i));
 	}
 }
 
 static avro_generic_value_iface_t  AVRO_GENERIC_RECORD_CLASS =
-{
-	{
-		/* "class" methods */
-		avro_generic_record_incref_iface,
-		avro_generic_record_decref_iface,
-		/* general "instance" methods */
-		avro_generic_value_incref,
-		avro_generic_value_decref,
-		avro_generic_record_reset,
-		avro_generic_record_get_type,
-		avro_generic_record_get_schema,
-		/* primitive getters */
-		NULL, /* get_boolean */
-		NULL, /* get_bytes */
-		NULL, /* grab_bytes */
-		NULL, /* get_double */
-		NULL, /* get_float */
-		NULL, /* get_int */
-		NULL, /* get_long */
-		NULL, /* get_null */
-		NULL, /* get_string */
-		NULL, /* grab_string */
-		NULL, /* get_enum */
-		NULL, /* get_fixed */
-		NULL, /* grab_fixed */
-		/* primitive setters */
-		NULL, /* set_boolean */
-		NULL, /* set_bytes */
-		NULL, /* give_bytes */
-		NULL, /* set_double */
-		NULL, /* set_float */
-		NULL, /* set_int */
-		NULL, /* set_long */
-		NULL, /* set_null */
-		NULL, /* set_string */
-		NULL, /* set_string_length */
-		NULL, /* give_string_length */
-		NULL, /* set_enum */
-		NULL, /* set_fixed */
-		NULL, /* give_fixed */
-		/* compound getters */
-		avro_generic_record_get_size,
-		avro_generic_record_get_by_index,
-		avro_generic_record_get_by_name,
-		NULL, /* get_discriminant */
-		NULL, /* get_current_branch */
-		/* compound setters */
-		NULL, /* append */
-		NULL, /* add */
-		NULL  /* set_branch */
-	},
-	avro_generic_record_instance_size,
-	avro_generic_record_init,
-	avro_generic_record_done
-};
+		{
+				{
+						/* "class" methods */
+						avro_generic_record_incref_iface,
+						avro_generic_record_decref_iface,
+						/* general "instance" methods */
+						avro_generic_value_incref,
+						avro_generic_value_decref,
+						avro_generic_record_reset,
+						avro_generic_record_get_type,
+						avro_generic_record_get_schema,
+						/* primitive getters */
+						NULL, /* get_boolean */
+						NULL, /* get_bytes */
+						NULL, /* grab_bytes */
+						NULL, /* get_double */
+						NULL, /* get_float */
+						NULL, /* get_int */
+						NULL, /* get_long */
+						NULL, /* get_null */
+						NULL, /* get_string */
+						NULL, /* grab_string */
+						NULL, /* get_enum */
+						NULL, /* get_fixed */
+						NULL, /* grab_fixed */
+						/* primitive setters */
+						NULL, /* set_boolean */
+						NULL, /* set_bytes */
+						NULL, /* give_bytes */
+						NULL, /* set_double */
+						NULL, /* set_float */
+						NULL, /* set_int */
+						NULL, /* set_long */
+						NULL, /* set_null */
+						NULL, /* set_string */
+						NULL, /* set_string_length */
+						NULL, /* give_string_length */
+						NULL, /* set_enum */
+						NULL, /* set_fixed */
+						NULL, /* give_fixed */
+						/* compound getters */
+						avro_generic_record_get_size,
+						avro_generic_record_get_by_index,
+						avro_generic_record_get_by_name,
+						NULL, /* get_discriminant */
+						NULL, /* get_current_branch */
+						/* compound setters */
+						NULL, /* append */
+						NULL, /* add */
+						NULL  /* set_branch */
+				},
+				avro_generic_record_instance_size,
+				avro_generic_record_init,
+				avro_generic_record_done
+		};
 
 static avro_generic_value_iface_t *
 avro_generic_record_class(avro_schema_t schema, memoize_state_t *state)
 {
 	avro_generic_record_value_iface_t  *iface =
-		(avro_generic_record_value_iface_t *) avro_new(avro_generic_record_value_iface_t);
+			(avro_generic_record_value_iface_t *) avro_new(avro_generic_record_value_iface_t);
 	if (iface == NULL) {
 		return NULL;
 	}
@@ -3104,9 +3106,9 @@ avro_generic_record_class(avro_schema_t schema, memoize_state_t *state)
 
 	iface->field_count = avro_schema_record_size(schema);
 	size_t  field_offsets_size =
-		sizeof(size_t) * iface->field_count;
+			sizeof(size_t) * iface->field_count;
 	size_t  field_ifaces_size =
-		sizeof(avro_generic_value_iface_t *) * iface->field_count;
+			sizeof(avro_generic_value_iface_t *) * iface->field_count;
 
 	if (iface->field_count == 0) {
 		iface->field_offsets = NULL;
@@ -3135,7 +3137,7 @@ avro_generic_record_class(avro_schema_t schema, memoize_state_t *state)
 		fprintf(stderr, "  Field %" PRIsz ":\n", i);
 #endif
 		avro_schema_t  field_schema =
-		    avro_schema_record_field_get_by_index(schema, i);
+				avro_schema_record_field_get_by_index(schema, i);
 #if DEBUG_FIELD_OFFSETS
 		fprintf(stderr, "    Schema %s\n",
 			avro_schema_type_name(field_schema));
@@ -3144,13 +3146,13 @@ avro_generic_record_class(avro_schema_t schema, memoize_state_t *state)
 		iface->field_offsets[i] = next_offset;
 
 		iface->field_ifaces[i] =
-		    avro_generic_class_from_schema_memoized(field_schema, state);
+				avro_generic_class_from_schema_memoized(field_schema, state);
 		if (iface->field_ifaces[i] == NULL) {
 			goto error;
 		}
 
 		ssize_t  field_size =
-		    avro_value_instance_size(iface->field_ifaces[i]);
+				avro_value_instance_size(iface->field_ifaces[i]);
 		if (field_size < 0) {
 			avro_set_error("Record field class must provide instance_size");
 			goto error;
@@ -3170,7 +3172,7 @@ avro_generic_record_class(avro_schema_t schema, memoize_state_t *state)
 
 	return &iface->parent;
 
-error:
+	error:
 	avro_schema_decref(iface->schema);
 	if (iface->field_offsets != NULL) {
 		avro_free(iface->field_offsets, field_offsets_size);
@@ -3248,7 +3250,7 @@ static avro_value_iface_t *
 avro_generic_union_incref_iface(avro_value_iface_t *viface)
 {
 	avro_generic_union_value_iface_t  *iface =
-	    container_of(viface, avro_generic_union_value_iface_t, parent);
+			container_of(viface, avro_generic_union_value_iface_t, parent);
 	avro_refcount_inc(&iface->refcount);
 	return viface;
 }
@@ -3257,7 +3259,7 @@ static void
 avro_generic_union_decref_iface(avro_value_iface_t *viface)
 {
 	avro_generic_union_value_iface_t  *iface =
-	    container_of(viface, avro_generic_union_value_iface_t, parent);
+			container_of(viface, avro_generic_union_value_iface_t, parent);
 
 	if (avro_refcount_dec(&iface->refcount)) {
 		size_t  i;
@@ -3267,7 +3269,7 @@ avro_generic_union_decref_iface(avro_value_iface_t *viface)
 
 		avro_schema_decref(iface->schema);
 		avro_free(iface->branch_ifaces,
-			  sizeof(avro_generic_value_iface_t *) * iface->branch_count);
+		          sizeof(avro_generic_value_iface_t *) * iface->branch_count);
 
 		avro_freet(avro_generic_union_value_iface_t, iface);
 	}
@@ -3278,7 +3280,7 @@ static int
 avro_generic_union_reset(const avro_value_iface_t *viface, void *vself)
 {
 	const avro_generic_union_value_iface_t  *iface =
-	    container_of(viface, avro_generic_union_value_iface_t, parent);
+			container_of(viface, avro_generic_union_value_iface_t, parent);
 	avro_generic_union_t  *self = (avro_generic_union_t *) vself;
 	/* Keep the same branch selected, for the common case that we're
 	 * about to reuse it. */
@@ -3288,8 +3290,8 @@ avro_generic_union_reset(const avro_value_iface_t *viface, void *vself)
 			self->discriminant);
 #endif
 		avro_value_t  value = {
-			avro_generic_union_branch_iface(iface, self),
-			avro_generic_union_branch(self)
+				avro_generic_union_branch_iface(iface, self),
+				avro_generic_union_branch(self)
 		};
 		return avro_value_reset(&value);
 	}
@@ -3308,14 +3310,14 @@ static avro_schema_t
 avro_generic_union_get_schema(const avro_value_iface_t *viface, const void *vself)
 {
 	const avro_generic_union_value_iface_t  *iface =
-	    container_of(viface, avro_generic_union_value_iface_t, parent);
+			container_of(viface, avro_generic_union_value_iface_t, parent);
 	AVRO_UNUSED(vself);
 	return iface->schema;
 }
 
 static int
 avro_generic_union_get_discriminant(const avro_value_iface_t *viface,
-				    const void *vself, int *out)
+                                    const void *vself, int *out)
 {
 	AVRO_UNUSED(viface);
 	const avro_generic_union_t  *self = (const avro_generic_union_t *) vself;
@@ -3325,10 +3327,10 @@ avro_generic_union_get_discriminant(const avro_value_iface_t *viface,
 
 static int
 avro_generic_union_get_current_branch(const avro_value_iface_t *viface,
-				      const void *vself, avro_value_t *branch)
+                                      const void *vself, avro_value_t *branch)
 {
 	const avro_generic_union_value_iface_t  *iface =
-	    container_of(viface, avro_generic_union_value_iface_t, parent);
+			container_of(viface, avro_generic_union_value_iface_t, parent);
 	const avro_generic_union_t  *self = (const avro_generic_union_t *) vself;
 	if (self->discriminant < 0) {
 		avro_set_error("Union has no selected branch");
@@ -3341,11 +3343,11 @@ avro_generic_union_get_current_branch(const avro_value_iface_t *viface,
 
 static int
 avro_generic_union_set_branch(const avro_value_iface_t *viface,
-			      void *vself, int discriminant,
-			      avro_value_t *branch)
+                              void *vself, int discriminant,
+                              avro_value_t *branch)
 {
 	const avro_generic_union_value_iface_t  *iface =
-	    container_of(viface, avro_generic_union_value_iface_t, parent);
+			container_of(viface, avro_generic_union_value_iface_t, parent);
 	int  rval;
 	avro_generic_union_t  *self = (avro_generic_union_t *) vself;
 
@@ -3366,8 +3368,8 @@ avro_generic_union_set_branch(const avro_value_iface_t *viface,
 				self->discriminant);
 #endif
 			avro_value_done
-			    (avro_generic_union_branch_giface(iface, self),
-			     avro_generic_union_branch(self));
+			(avro_generic_union_branch_giface(iface, self),
+			 avro_generic_union_branch(self));
 		}
 		self->discriminant = discriminant;
 		if (discriminant >= 0) {
@@ -3376,8 +3378,8 @@ avro_generic_union_set_branch(const avro_value_iface_t *viface,
 				self->discriminant);
 #endif
 			check(rval, avro_value_init
-			      (avro_generic_union_branch_giface(iface, self),
-			       avro_generic_union_branch(self)));
+					(avro_generic_union_branch_giface(iface, self),
+					 avro_generic_union_branch(self)));
 		}
 	}
 
@@ -3393,7 +3395,7 @@ static size_t
 avro_generic_union_instance_size(const avro_value_iface_t *viface)
 {
 	const avro_generic_union_value_iface_t  *iface =
-	    container_of(viface, avro_generic_union_value_iface_t, parent);
+			container_of(viface, avro_generic_union_value_iface_t, parent);
 	return iface->instance_size;
 }
 
@@ -3410,7 +3412,7 @@ static void
 avro_generic_union_done(const avro_value_iface_t *viface, void *vself)
 {
 	const avro_generic_union_value_iface_t  *iface =
-	    container_of(viface, avro_generic_union_value_iface_t, parent);
+			container_of(viface, avro_generic_union_value_iface_t, parent);
 	avro_generic_union_t  *self = (avro_generic_union_t *) vself;
 	if (self->discriminant >= 0) {
 #if DEBUG_BRANCHES
@@ -3418,74 +3420,74 @@ avro_generic_union_done(const avro_value_iface_t *viface, void *vself)
 			self->discriminant);
 #endif
 		avro_value_done
-		    (avro_generic_union_branch_giface(iface, self),
-		     avro_generic_union_branch(self));
+		(avro_generic_union_branch_giface(iface, self),
+		 avro_generic_union_branch(self));
 		self->discriminant = -1;
 	}
 }
 
 static avro_generic_value_iface_t  AVRO_GENERIC_UNION_CLASS =
-{
-	{
-		/* "class" methods */
-		avro_generic_union_incref_iface,
-		avro_generic_union_decref_iface,
-		/* general "instance" methods */
-		avro_generic_value_incref,
-		avro_generic_value_decref,
-		avro_generic_union_reset,
-		avro_generic_union_get_type,
-		avro_generic_union_get_schema,
-		/* primitive getters */
-		NULL, /* get_boolean */
-		NULL, /* get_bytes */
-		NULL, /* grab_bytes */
-		NULL, /* get_double */
-		NULL, /* get_float */
-		NULL, /* get_int */
-		NULL, /* get_long */
-		NULL, /* get_null */
-		NULL, /* get_string */
-		NULL, /* grab_string */
-		NULL, /* get_enum */
-		NULL, /* get_fixed */
-		NULL, /* grab_fixed */
-		/* primitive setters */
-		NULL, /* set_boolean */
-		NULL, /* set_bytes */
-		NULL, /* give_bytes */
-		NULL, /* set_double */
-		NULL, /* set_float */
-		NULL, /* set_int */
-		NULL, /* set_long */
-		NULL, /* set_null */
-		NULL, /* set_string */
-		NULL, /* set_string_length */
-		NULL, /* give_string_length */
-		NULL, /* set_enum */
-		NULL, /* set_fixed */
-		NULL, /* give_fixed */
-		/* compound getters */
-		NULL, /* get_size */
-		NULL, /* get_by_index */
-		NULL, /* get_by_name */
-		avro_generic_union_get_discriminant,
-		avro_generic_union_get_current_branch,
-		/* compound setters */
-		NULL, /* append */
-		NULL, /* add */
-		avro_generic_union_set_branch
-	},
-	avro_generic_union_instance_size,
-	avro_generic_union_init,
-	avro_generic_union_done
-};
+		{
+				{
+						/* "class" methods */
+						avro_generic_union_incref_iface,
+						avro_generic_union_decref_iface,
+						/* general "instance" methods */
+						avro_generic_value_incref,
+						avro_generic_value_decref,
+						avro_generic_union_reset,
+						avro_generic_union_get_type,
+						avro_generic_union_get_schema,
+						/* primitive getters */
+						NULL, /* get_boolean */
+						NULL, /* get_bytes */
+						NULL, /* grab_bytes */
+						NULL, /* get_double */
+						NULL, /* get_float */
+						NULL, /* get_int */
+						NULL, /* get_long */
+						NULL, /* get_null */
+						NULL, /* get_string */
+						NULL, /* grab_string */
+						NULL, /* get_enum */
+						NULL, /* get_fixed */
+						NULL, /* grab_fixed */
+						/* primitive setters */
+						NULL, /* set_boolean */
+						NULL, /* set_bytes */
+						NULL, /* give_bytes */
+						NULL, /* set_double */
+						NULL, /* set_float */
+						NULL, /* set_int */
+						NULL, /* set_long */
+						NULL, /* set_null */
+						NULL, /* set_string */
+						NULL, /* set_string_length */
+						NULL, /* give_string_length */
+						NULL, /* set_enum */
+						NULL, /* set_fixed */
+						NULL, /* give_fixed */
+						/* compound getters */
+						NULL, /* get_size */
+						NULL, /* get_by_index */
+						NULL, /* get_by_name */
+						avro_generic_union_get_discriminant,
+						avro_generic_union_get_current_branch,
+						/* compound setters */
+						NULL, /* append */
+						NULL, /* add */
+						avro_generic_union_set_branch
+				},
+				avro_generic_union_instance_size,
+				avro_generic_union_init,
+				avro_generic_union_done
+		};
 
 static avro_generic_value_iface_t *
 avro_generic_union_class(avro_schema_t schema, memoize_state_t *state)
 {
 	avro_generic_union_value_iface_t  *iface =
-		(avro_generic_union_value_iface_t *) avro_new(avro_generic_union_value_iface_t);
+			(avro_generic_union_value_iface_t *) avro_new(avro_generic_union_value_iface_t);
 	if (iface == NULL) {
 		return NULL;
 	}
@@ -3497,7 +3499,7 @@ avro_generic_union_class(avro_schema_t schema, memoize_state_t *state)
 
 	iface->branch_count = avro_schema_union_size(schema);
 	size_t  branch_ifaces_size =
-		sizeof(avro_generic_value_iface_t *) * iface->branch_count;
+			sizeof(avro_generic_value_iface_t *) * iface->branch_count;
 
 	iface->branch_ifaces = (avro_generic_value_iface_t **) avro_malloc(branch_ifaces_size);
 	if (iface->branch_ifaces == NULL) {
@@ -3508,16 +3510,16 @@ avro_generic_union_class(avro_schema_t schema, memoize_state_t *state)
 	size_t  i;
 	for (i = 0; i < iface->branch_count; i++) {
 		avro_schema_t  branch_schema =
-		    avro_schema_union_branch(schema, i);
+				avro_schema_union_branch(schema, i);
 
 		iface->branch_ifaces[i] =
-		    avro_generic_class_from_schema_memoized(branch_schema, state);
+				avro_generic_class_from_schema_memoized(branch_schema, state);
 		if (iface->branch_ifaces[i] == NULL) {
 			goto error;
 		}
 
 		ssize_t  branch_size =
-		    avro_value_instance_size(iface->branch_ifaces[i]);
+				avro_value_instance_size(iface->branch_ifaces[i]);
 		if (branch_size < 0) {
 			avro_set_error("Union branch class must provide instance_size");
 			goto error;
@@ -3534,14 +3536,14 @@ avro_generic_union_class(avro_schema_t schema, memoize_state_t *state)
 	}
 
 	iface->instance_size =
-		sizeof(avro_generic_union_t) + max_branch_size;
+			sizeof(avro_generic_union_t) + max_branch_size;
 #if DEBUG_BRANCHES
 	fprintf(stderr, "MAX BRANCH SIZE: %" PRIsz "\n", max_branch_size);
 #endif
 
 	return &iface->parent;
 
-error:
+	error:
 	avro_schema_decref(iface->schema);
 	if (iface->branch_ifaces != NULL) {
 		for (i = 0; i < iface->branch_count; i++) {
@@ -3562,7 +3564,7 @@ error:
 
 static avro_generic_value_iface_t *
 avro_generic_class_from_schema_memoized(avro_schema_t schema,
-					memoize_state_t *state)
+                                        memoize_state_t *state)
 {
 	/*
 	 * If we've already instantiated a value class for this schema,
@@ -3581,63 +3583,63 @@ avro_generic_class_from_schema_memoized(avro_schema_t schema,
 	 */
 
 	switch (schema->type) {
-	case AVRO_BOOLEAN:
-		result = &AVRO_GENERIC_BOOLEAN_CLASS;
-		break;
-	case AVRO_BYTES:
-		result = &AVRO_GENERIC_BYTES_CLASS;
-		break;
-	case AVRO_DOUBLE:
-		result = &AVRO_GENERIC_DOUBLE_CLASS;
-		break;
-	case AVRO_FLOAT:
-		result = &AVRO_GENERIC_FLOAT_CLASS;
-		break;
-	case AVRO_INT32:
-		result = &AVRO_GENERIC_INT_CLASS;
-		break;
-	case AVRO_INT64:
-		result = &AVRO_GENERIC_LONG_CLASS;
-		break;
-	case AVRO_NULL:
-		result = &AVRO_GENERIC_NULL_CLASS;
-		break;
-	case AVRO_STRING:
-		result = &AVRO_GENERIC_STRING_CLASS;
-		break;
+		case AVRO_BOOLEAN:
+			result = &AVRO_GENERIC_BOOLEAN_CLASS;
+			break;
+		case AVRO_BYTES:
+			result = &AVRO_GENERIC_BYTES_CLASS;
+			break;
+		case AVRO_DOUBLE:
+			result = &AVRO_GENERIC_DOUBLE_CLASS;
+			break;
+		case AVRO_FLOAT:
+			result = &AVRO_GENERIC_FLOAT_CLASS;
+			break;
+		case AVRO_INT32:
+			result = &AVRO_GENERIC_INT_CLASS;
+			break;
+		case AVRO_INT64:
+			result = &AVRO_GENERIC_LONG_CLASS;
+			break;
+		case AVRO_NULL:
+			result = &AVRO_GENERIC_NULL_CLASS;
+			break;
+		case AVRO_STRING:
+			result = &AVRO_GENERIC_STRING_CLASS;
+			break;
 
-	case AVRO_ARRAY:
-		result = avro_generic_array_class(schema, state);
-		break;
-	case AVRO_ENUM:
-		result = avro_generic_enum_class(schema);
-		break;
-	case AVRO_FIXED:
-		result = avro_generic_fixed_class(schema);
-		break;
-	case AVRO_MAP:
-		result = avro_generic_map_class(schema, state);
-		break;
-	case AVRO_RECORD:
-		result = avro_generic_record_class(schema, state);
-		break;
-	case AVRO_UNION:
-		result = avro_generic_union_class(schema, state);
-		break;
+		case AVRO_ARRAY:
+			result = avro_generic_array_class(schema, state);
+			break;
+		case AVRO_ENUM:
+			result = avro_generic_enum_class(schema);
+			break;
+		case AVRO_FIXED:
+			result = avro_generic_fixed_class(schema);
+			break;
+		case AVRO_MAP:
+			result = avro_generic_map_class(schema, state);
+			break;
+		case AVRO_RECORD:
+			result = avro_generic_record_class(schema, state);
+			break;
+		case AVRO_UNION:
+			result = avro_generic_union_class(schema, state);
+			break;
 
-	case AVRO_LINK:
+		case AVRO_LINK:
 		{
 			avro_generic_link_value_iface_t  *lresult =
-			    avro_generic_link_class(schema);
+					avro_generic_link_class(schema);
 			lresult->next = state->links;
 			state->links = lresult;
 			result = &lresult->parent;
 			break;
 		}
 
-	default:
-		avro_set_error("Unknown schema type");
-		return NULL;
+		default:
+			avro_set_error("Unknown schema type");
+			return NULL;
 	}
 
 	/*
@@ -3666,7 +3668,7 @@ avro_generic_class_from_schema(avro_schema_t schema)
 	 */
 
 	avro_generic_value_iface_t  *result =
-	    avro_generic_class_from_schema_memoized(schema, &state);
+			avro_generic_class_from_schema_memoized(schema, &state);
 	if (result == NULL) {
 		avro_memoize_done(&state.mem);
 		return NULL;
@@ -3680,13 +3682,13 @@ avro_generic_class_from_schema(avro_schema_t schema)
 	while (state.links != NULL) {
 		avro_generic_link_value_iface_t  *link_iface = state.links;
 		avro_schema_t  target_schema =
-		    avro_schema_link_target(link_iface->schema);
+				avro_schema_link_target(link_iface->schema);
 
 		avro_generic_value_iface_t  *target_iface = NULL;
 		if (!avro_memoize_get(&state.mem, target_schema, NULL,
-				      (void **) &target_iface)) {
+		                      (void **) &target_iface)) {
 			avro_set_error("Never created a value implementation for %s",
-				       avro_schema_type_name(target_schema));
+			               avro_schema_type_name(target_schema));
 			return NULL;
 		}
 
